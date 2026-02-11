@@ -58,16 +58,25 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                // Removed project(":ui") to break circular dependency
-
                 implementation(libs.kotlin.stdlib)
                 implementation(libs.bundles.composeMaterial3)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.compose.ui.tooling.preview)
 
-
                 // Navigation 3 (JetBrains Multiplatform)
                 implementation(libs.bundles.navigation3)
+            }
+        }
+
+        val jsMain by getting {
+            dependencies {
+                api(libs.navigation3.browser)
+            }
+        }
+
+        val wasmJsMain by getting {
+            dependencies {
+                api(libs.navigation3.browser)
             }
         }
 
@@ -79,14 +88,12 @@ kotlin {
 
         androidMain {
             dependencies {
-                // Add ui-tooling specifically for Android target to fix ClassNotFoundException: androidx.compose.ui.tooling.ComposeViewAdapter
                 implementation(libs.compose.ui.tooling)
             }
         }
 
         jvmMain {
             dependencies {
-                // Add ui-tooling for JVM target as well
                 implementation(libs.compose.ui.tooling)
             }
         }

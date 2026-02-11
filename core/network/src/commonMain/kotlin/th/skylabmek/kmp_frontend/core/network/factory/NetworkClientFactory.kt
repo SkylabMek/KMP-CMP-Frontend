@@ -1,5 +1,6 @@
 package th.skylabmek.kmp_frontend.core.network.factory
 
+import th.skylabmek.kmp_frontend.core.data_local.domain.LocalSettingsRepository
 import th.skylabmek.kmp_frontend.core.network.config.NetworkConfig
 import th.skylabmek.kmp_frontend.core.network.network_client.impl.CommonDefaultKtorApiClient
 import th.skylabmek.kmp_frontend.core.network.network_client.impl.ErrorLoggingKtorApiClient
@@ -15,10 +16,11 @@ class NetworkClientFactory(
      * Uses a SHARED provider to optimize connections and resource usage.
      */
     fun createDefaultFeatureNetworkClient(
+        localSettings: LocalSettingsRepository,
         config: NetworkConfig = defaultNetworkConfig
     ): NetworkClient {
         val provider = httpClientProviderFactory.createSharedHttpClientProvider(config)
-        return CommonDefaultKtorApiClient(provider, config)
+        return CommonDefaultKtorApiClient(provider, config, localSettings)
     }
 
     /**

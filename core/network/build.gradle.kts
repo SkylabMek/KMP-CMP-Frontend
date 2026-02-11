@@ -50,7 +50,10 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(project(":shared-resources"))
-                
+
+                //Data Local
+                implementation(project(":core:data-local"))
+
                 //Koin
                 implementation(libs.koin.core)
 

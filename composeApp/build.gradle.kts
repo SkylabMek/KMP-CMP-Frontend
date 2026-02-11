@@ -49,54 +49,78 @@ kotlin {
 
     // 2. Configure source sets after targets are declared
     sourceSets {
-        commonMain.dependencies {
-            implementation(project(":navigation"))
-            implementation(project(":ui"))
-            implementation(project(":domain"))
-            implementation(project(":shared-resources"))
-            implementation(project(":core:network"))
-            implementation(project(":core:common"))
-            implementation(project(":features:app"))
-            implementation(project(":features:profile"))
-            implementation(project(":features:home"))
+        val commonMain by getting {
+            dependencies {
+                implementation(project(":navigation"))
+                implementation(project(":ui"))
+                implementation(project(":domain"))
+                implementation(project(":shared-resources"))
+                implementation(project(":core:network"))
+                implementation(project(":core:common"))
+                implementation(project(":core:data-local"))
+                implementation(project(":features:app"))
+                implementation(project(":features:profile"))
+                implementation(project(":features:home"))
 
-            implementation(libs.kotlinx.datetime)
+                implementation(libs.kotlinx.datetime)
 
-            // compose
-            implementation(libs.compose.materialIconsExtended)
-            implementation(libs.bundles.composeMaterial3)
-            implementation(libs.compose.components.resources)
-            implementation(libs.compose.ui.tooling.preview)
-            implementation(libs.androidx.lifecycle.viewmodelCompose)
-            implementation(libs.androidx.lifecycle.runtimeCompose)
+                // compose
+                implementation(libs.compose.materialIconsExtended)
+                implementation(libs.bundles.composeMaterial3)
+                implementation(libs.compose.components.resources)
+                implementation(libs.compose.ui.tooling.preview)
+                implementation(libs.androidx.lifecycle.viewmodelCompose)
+                implementation(libs.androidx.lifecycle.runtimeCompose)
 
-            // navigation
-            implementation(project(":navigation"))
-            implementation(libs.bundles.navigation3)
-            
-            // Koin
-            implementation(libs.koin.core)
-            implementation(libs.koin.compose)
-            implementation(libs.koin.compose.viewmodel)
+                // navigation
+                implementation(project(":navigation"))
+                implementation(libs.bundles.navigation3)
+
+                // Koin
+                implementation(libs.koin.core)
+                implementation(libs.koin.compose)
+                implementation(libs.koin.compose.viewmodel)
+            }
         }
-        androidMain.dependencies {
-            implementation(libs.compose.ui.tooling.preview)
-            implementation(libs.compose.ui.tooling)
-            implementation(libs.androidx.activity.compose)
+
+        val webMain by creating {
+            dependsOn(commonMain)
+            dependencies {
+                implementation(libs.kotlinx.browser)
+            }
         }
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
+
+        val jsMain by getting {
+            dependsOn(webMain)
         }
-        jvmMain.dependencies {
-            implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutinesSwing)
-            implementation(libs.compose.ui.tooling)
+
+        val wasmJsMain by getting {
+            dependsOn(webMain)
+        }
+
+        val androidMain by getting {
+            dependencies {
+                implementation(libs.compose.ui.tooling.preview)
+                implementation(libs.compose.ui.tooling)
+                implementation(libs.androidx.activity.compose)
+            }
+        }
+        
+        val commonTest by getting {
+            dependencies {
+                implementation(libs.kotlin.test)
+            }
+        }
+        
+        val jvmMain by getting {
+            dependencies {
+                implementation(compose.desktop.currentOs)
+                implementation(libs.kotlinx.coroutinesSwing)
+                implementation(libs.compose.ui.tooling)
+            }
         }
     }
 }
-//dependencies {
-//    implementation(project(":"))
-//}
 
 compose.resources {
     generateResClass = always

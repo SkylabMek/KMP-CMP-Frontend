@@ -9,6 +9,8 @@ import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.rememberNavBackStack
 import th.skylabmek.kmp_frontend.features.home.navigation.HomeNavKey
 import th.skylabmek.kmp_frontend.features.home.navigation.HomeNavProvider
+import th.skylabmek.kmp_frontend.features.profile.navigation.ProfileNavKey
+import th.skylabmek.kmp_frontend.features.profile.navigation.ProfileNavProvider
 import th.skylabmek.kmp_frontend.navigation.model.createNavigationConfig
 import th.skylabmek.kmp_frontend.navigation.tools.FeatureNavProvider
 import th.skylabmek.kmp_frontend.navigation.tools.NavKey
@@ -40,6 +42,9 @@ fun rememberAppNavigationState(
             HomeNavProvider(
                 profileId = profileId,
                 appId = appId
+            ),
+            ProfileNavProvider(
+                profileId = profileId
             )
         )
     }
@@ -62,10 +67,11 @@ fun rememberAppNavigationState(
             ),
             null, // Placeholder for "Coming Soon"
             null,
-//            NavItemIcon(
-//                title = "Profile",
-//                icon = Icons.Default.Person
-//            )
+            NavItemIcon(
+                title = "Profile",
+                key = ProfileNavKey.Profile,
+                icon = Icons.Default.Person
+            )
         )
     }
 

@@ -9,4 +9,7 @@ interface NetworkClient {
         reqSpec: RequestSpec,
         mapper: suspend (HttpResponse) -> T,
     ): NetworkResult<T>
+
+    fun setHeader(key: String, value: String)
+    fun removeHeader(key: String)
 }

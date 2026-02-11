@@ -52,4 +52,12 @@ class ExternalServiceKtorApiClient(
             NetworkResult.Failure(e.toNetworkError())
         }
     }
+
+    override fun setHeader(key: String, value: String) {
+        // Not implemented for external service client
+    }
+
+    override fun removeHeader(key: String) {
+        // Not implemented for external service client
+    }
 }

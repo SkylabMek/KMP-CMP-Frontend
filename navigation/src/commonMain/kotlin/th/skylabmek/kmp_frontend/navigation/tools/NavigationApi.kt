@@ -32,4 +32,9 @@ interface FeatureNavProvider {
      * Maps a deep link URI to a NavKey if this feature handles it.
      */
     fun mapUriToNavKey(uri: String): NavKey? = null
+
+    /**
+     * Maps a NavKey to a URI path.
+     */
+    fun mapNavKeyToUri(key: NavKey): String? = null
 }

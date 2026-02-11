@@ -52,6 +52,7 @@ kotlin {
             dependencies {
                 implementation(libs.kotlin.stdlib)
                 implementation(project(":shared-resources"))
+                implementation(project(":core:data-local"))
                 api(project(":core:network"))
 
                 implementation(libs.bundles.composeMaterial3)

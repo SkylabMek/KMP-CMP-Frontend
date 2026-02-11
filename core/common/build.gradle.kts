@@ -50,6 +50,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(project(":shared-resources"))
+                implementation(project(":core:data-local"))
                 implementation(libs.kotlin.stdlib)
 
                 // compose

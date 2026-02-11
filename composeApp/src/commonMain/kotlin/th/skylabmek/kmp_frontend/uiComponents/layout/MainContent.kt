@@ -16,6 +16,7 @@ import th.skylabmek.kmp_frontend.navigation.tools.FeatureNavProvider
 import th.skylabmek.kmp_frontend.navigation.tools.NavKey
 import th.skylabmek.kmp_frontend.navigation.tools.NavigatorAccessor
 import th.skylabmek.kmp_frontend.navigation.tools.ProvideNavigator
+import th.skylabmek.kmp_frontend.navigation.tools.SyncWithBrowser
 import th.skylabmek.kmp_frontend.presentation.viewmodel.MainContentViewModel
 import th.skylabmek.kmp_frontend.ui.config.ProvideUiConfig
 import th.skylabmek.kmp_frontend.ui.navigation.NavItemIcon
@@ -36,6 +37,9 @@ fun MainContent(
 ) {
     val lifeStatusState by viewModel.lifeStatusState.collectAsState()
     val themeSetting by viewModel.themeSetting.collectAsState()
+
+    // Sync backstack with browser history on web platforms
+    backStack.SyncWithBrowser(providers)
 
     // Load profile data when profileId changes
     LaunchedEffect(profileId) {

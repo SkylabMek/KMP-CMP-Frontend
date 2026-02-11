@@ -5,14 +5,17 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import th.skylabmek.kmp_frontend.core.common.UiState
+import th.skylabmek.kmp_frontend.core.data_local.domain.LocalSettingsRepository
 import th.skylabmek.kmp_frontend.domain.model.profile.LifeStatus
 import th.skylabmek.kmp_frontend.features.profile.presentation.viewmodel.ProfileViewModel
 import th.skylabmek.kmp_frontend.ui.config.ThemeSetting
 
 class MainContentViewModel(
-    private val profileViewModel: ProfileViewModel
+    private val profileViewModel: ProfileViewModel,
+    private val localSettings: LocalSettingsRepository,
 ) : ViewModel() {
 
     private val _lifeStatusState = MutableStateFlow<UiState<LifeStatus>>(UiState.Loading)
@@ -32,11 +35,24 @@ class MainContentViewModel(
                 }
             }
         }
+
+        // Observe theme setting changes from local storage
+        viewModelScope.launch {
+            localSettings.getStringFlow(THEME_SETTING_KEY, ThemeSetting.SYSTEM.name)
+                .collectLatest { settingName ->
+                    try {
+                        _themeSetting.value = ThemeSetting.valueOf(settingName)
+                    } catch (e: Exception) {
+                        _themeSetting.value = ThemeSetting.SYSTEM
+                    }
+                }
+        }
     }
 
     fun setThemeSetting(setting: ThemeSetting) {
+        localSettings.setString(THEME_SETTING_KEY, setting.name)
+        // Manually update the state to ensure immediate UI feedback
         _themeSetting.value = setting
-        // TODO: Save theme preference to persistence
     }
 
     fun loadProfileData(profileId: String) {
@@ -45,5 +61,9 @@ class MainContentViewModel(
 
     fun refreshLifeStatus(profileId: String) {
         profileViewModel.loadProfileBasicData(profileId)
+    }
+
+    companion object {
+        private const val THEME_SETTING_KEY = "theme_setting"
     }
 }

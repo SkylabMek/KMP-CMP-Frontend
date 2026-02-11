@@ -46,4 +46,12 @@ class ErrorLoggingKtorApiClient(
             NetworkResult.Failure(NetworkError.Unknown(e))
         }
     }
+
+    override fun setHeader(key: String, value: String) {
+        // Not implemented for error logging client
+    }
+
+    override fun removeHeader(key: String) {
+        // Not implemented for error logging client
+    }
 }

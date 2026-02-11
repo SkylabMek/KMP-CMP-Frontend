@@ -6,6 +6,8 @@ plugins {
 //    alias(libs.plugins.androidLint)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    // navigation
+    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
@@ -84,6 +86,7 @@ kotlin {
                 implementation(project(":core:common"))
                 implementation(project(":domain"))
                 implementation(project(":shared-resources"))
+                implementation(project(":core:data-local"))
                 implementation(libs.kotlin.stdlib)
 
                 implementation(libs.bundles.composeMaterial3)
@@ -93,6 +96,11 @@ kotlin {
                 implementation(libs.androidx.lifecycle.runtimeCompose)
                 implementation(libs.koin.compose)
                 implementation(libs.koin.compose.viewmodel)
+
+                // navigation
+                implementation(project(":navigation"))
+                implementation(libs.bundles.navigation3)
+
                 // Add KMP dependencies here
             }
         }

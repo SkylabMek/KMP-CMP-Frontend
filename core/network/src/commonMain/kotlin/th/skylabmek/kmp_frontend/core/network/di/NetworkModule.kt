@@ -19,7 +19,7 @@ fun networkModule(
 
     // 2. Default Feature Client (Shared)
     single<NetworkClient>(qualifier = NetworkQualifier.Default.qualifier) {
-        get<NetworkClientFactory>().createDefaultFeatureNetworkClient()
+        get<NetworkClientFactory>().createDefaultFeatureNetworkClient(get())
     }
 
     // 3. Fatal Error Logging Client (Stateless)

@@ -2,6 +2,7 @@ package th.skylabmek.kmp_frontend.di
 
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
+import th.skylabmek.kmp_frontend.core.data_local.di.DataLocalModule
 import th.skylabmek.kmp_frontend.di.modules.appNetworkModule
 import th.skylabmek.kmp_frontend.di.modules.repositoryModule
 import th.skylabmek.kmp_frontend.di.modules.viewModelModule
@@ -17,6 +18,7 @@ fun initKoin(appDeclaration: KoinAppDeclaration? = null) {
         appDeclaration?.invoke(this)
         modules(
             appNetworkModule,
+            DataLocalModule.modules(),
             repositoryModule,
             viewModelModule,
         )

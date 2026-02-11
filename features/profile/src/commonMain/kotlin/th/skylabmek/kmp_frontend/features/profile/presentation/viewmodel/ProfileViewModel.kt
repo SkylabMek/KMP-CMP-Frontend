@@ -8,11 +8,20 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import th.skylabmek.kmp_frontend.core.common.UiError
 import th.skylabmek.kmp_frontend.core.common.UiState
+import th.skylabmek.kmp_frontend.core.common.util.isUserLoggedIn
+import th.skylabmek.kmp_frontend.core.data_local.domain.LocalSettingsRepository
 import th.skylabmek.kmp_frontend.core.network.result.NetworkResult
+import th.skylabmek.kmp_frontend.domain.model.auth.LoginRequest
+import th.skylabmek.kmp_frontend.domain.model.auth.LogoutRequest
+import th.skylabmek.kmp_frontend.domain.model.auth.MeResult
 import th.skylabmek.kmp_frontend.domain.model.profile.Announce
 import th.skylabmek.kmp_frontend.domain.model.profile.LifeStatus
 import th.skylabmek.kmp_frontend.domain.model.profile.Performance
+import th.skylabmek.kmp_frontend.domain.repository.auth.AuthRepository
 import th.skylabmek.kmp_frontend.domain.repository.profile.ProfileRepository
+import th.skylabmek.kmp_frontend.features.profile.presentation.ui.profile.LoginState
+import th.skylabmek.kmp_frontend.shared_resources.Res
+import th.skylabmek.kmp_frontend.shared_resources.error_unknown
 
 data class ProfileBasicData(
     val lifeStatus: LifeStatus,
@@ -20,7 +29,9 @@ data class ProfileBasicData(
 )
 
 class ProfileViewModel(
-    private val profileRepository: ProfileRepository
+    private val profileRepository: ProfileRepository,
+    private val authRepository: AuthRepository,
+    private val localSettings: LocalSettingsRepository
 ) : ViewModel() {
     private var hasBasicDataLoadedOnce = false
     private var hasPerformancesLoadedOnce = false
@@ -30,6 +41,58 @@ class ProfileViewModel(
 
     private val _performancesState = MutableStateFlow<UiState<List<Performance>>>(UiState.Loading)
     val performancesState: StateFlow<UiState<List<Performance>>> = _performancesState.asStateFlow()
+
+    private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
+    val loginState: StateFlow<LoginState> = _loginState.asStateFlow()
+
+    private val _meState = MutableStateFlow<UiState<MeResult>>(UiState.Loading)
+    val meState: StateFlow<UiState<MeResult>> = _meState.asStateFlow()
+
+    init {
+        if (isUserLoggedIn(localSettings)) {
+            loadMe()
+        }
+    }
+
+    fun login(username: String, password: String) {
+        viewModelScope.launch {
+            _loginState.value = LoginState.Loading
+            val result = authRepository.login(LoginRequest(username, password))
+            when (result) {
+                is NetworkResult.Success -> {
+                    _loginState.value = LoginState.Success
+                    loadMe()
+                }
+                is NetworkResult.Failure -> {
+                    _loginState.value = LoginState.Error(result.error.toString())
+                }
+            }
+        }
+    }
+
+    fun logout() {
+        viewModelScope.launch {
+            val refreshToken = localSettings.getString("refresh_token", "")
+            authRepository.logout(LogoutRequest(refreshToken = refreshToken))
+            _meState.value = UiState.Error(UiError.StringRes(Res.string.error_unknown))
+        }
+    }
+
+    fun loadMe() {
+        viewModelScope.launch {
+            _meState.value = UiState.Loading
+            when (val result = authRepository.me()) {
+                is NetworkResult.Success -> {
+                    _meState.value = UiState.Success(result.data)
+                }
+                is NetworkResult.Failure -> {
+                    _meState.value = UiState.Error(
+                        UiError.StringRes(result.error.asStringResource())
+                    )
+                }
+            }
+        }
+    }
 
     fun getOrLoadProfileBasicData(profileId: String): StateFlow<UiState<ProfileBasicData>> {
         if (!hasBasicDataLoadedOnce) {

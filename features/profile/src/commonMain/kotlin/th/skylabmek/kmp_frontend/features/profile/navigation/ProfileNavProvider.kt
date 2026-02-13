@@ -27,4 +27,20 @@ class ProfileNavProvider(
         polymorphicModuleBuilder.subclass(ProfileNavKey.Profile::class, ProfileNavKey.Profile.serializer())
         polymorphicModuleBuilder.subclass(ProfileNavKey.Login::class, ProfileNavKey.Login.serializer())
     }
+
+    override fun mapUriToNavKey(uri: String): NavKey? {
+        return when {
+            uri.endsWith("/profile") -> ProfileNavKey.Profile
+            uri.endsWith("/login") -> ProfileNavKey.Login
+            else -> null
+        }
+    }
+
+    override fun mapNavKeyToUri(key: NavKey): String? {
+        return when (key) {
+            is ProfileNavKey.Profile -> "/profile"
+            is ProfileNavKey.Login -> "/login"
+            else -> null
+        }
+    }
 }

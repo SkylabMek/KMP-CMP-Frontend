@@ -22,4 +22,12 @@ class HomeNavProvider(
     override fun registerSerializers(polymorphicModuleBuilder: PolymorphicModuleBuilder<NavKey>) {
         polymorphicModuleBuilder.subclass(HomeNavKey.Home::class, HomeNavKey.Home.serializer())
     }
+
+    override fun mapUriToNavKey(uri: String): NavKey? {
+        return if (uri == "/" || uri.endsWith("/home")) HomeNavKey.Home else null
+    }
+
+    override fun mapNavKeyToUri(key: NavKey): String? {
+        return if (key is HomeNavKey.Home) "/" else null
+    }
 }

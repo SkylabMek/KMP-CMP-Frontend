@@ -12,7 +12,7 @@ plugins {
 
 kotlin {
     jvmToolchain(21)
-    // 1. Declare targets first
+    
     androidLibrary {
         namespace = "th.skylabmek.kmp_frontend"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
@@ -47,9 +47,8 @@ kotlin {
         }
     }
 
-    // 2. Configure source sets after targets are declared
     sourceSets {
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 implementation(project(":navigation"))
                 implementation(project(":ui"))
@@ -83,20 +82,10 @@ kotlin {
             }
         }
 
-        val webMain by creating {
-            dependsOn(commonMain)
-            dependencies {
-                implementation(libs.kotlinx.browser)
-            }
-        }
-
-        val jsMain by getting {
-            dependsOn(webMain)
-        }
-
-        val wasmJsMain by getting {
-            dependsOn(webMain)
-        }
+        // We use the default hierarchy template.
+        // It automatically handles commonMain -> jsMain, commonMain -> wasmJsMain, etc.
+        // To share code between js and wasmJs, we can use the 'webMain' source set
+        // but we must let the template create the edges.
 
         val androidMain by getting {
             dependencies {
@@ -119,6 +108,12 @@ kotlin {
                 implementation(libs.compose.ui.tooling)
             }
         }
+        
+        // Let the default hierarchy template create jsMain and wasmJsMain.
+        // If you need a shared webMain, the best practice in modern KMP is to 
+        // name it such that the template recognizes it or use the 'applyDefaultHierarchyTemplate' 
+        // to customize it, but manually adding dependsOn to getting/creating source sets 
+        // often conflicts with the template's automatic discovery.
     }
 }
 

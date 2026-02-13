@@ -93,7 +93,6 @@ kotlin {
 
                 implementation(libs.bundles.composeMaterial3)
                 implementation(libs.compose.components.resources)
-                implementation(libs.kotlinx.datetime)
                 implementation(libs.compose.materialIconsExtended)
                 implementation(libs.compose.ui.tooling.preview)
             }

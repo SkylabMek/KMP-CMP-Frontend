@@ -22,6 +22,7 @@
     <string name="nav_projects">Projects</string>
     <string name="nav_contact">Contact</string>
     <string name="nav_coming_soon">Coming Soon</string>
+    <string name="nav_menu">Menu</string>
 
     <!-- Footer Copyright -->
     <string name="footer_copyright">© SkylabMek. All rights reserved.</string>
@@ -40,6 +41,9 @@
     <!-- App Info -->
     <string name="domain_name">SkylabMek</string>
     <string name="app_alias">SkylabMek Personal Website</string>
+    <string name="app_dev_name">Skylabmek</string>
+    <string name="app_dev_role">Fullstack Developer / KMP Enthusiast</string>
+    <string name="profile_admin">Profile Admin</string>
 
     <!-- Feature Status -->
     <string name="feature_status_operational_name">Operational</string>

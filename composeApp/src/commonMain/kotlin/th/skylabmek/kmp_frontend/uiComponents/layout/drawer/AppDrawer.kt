@@ -1,13 +1,19 @@
 package th.skylabmek.kmp_frontend.uiComponents.layout.drawer
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AdminPanelSettings
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -19,12 +25,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
+import th.skylabmek.kmp_frontend.features.profile.navigation.ProfileNavKey
 import th.skylabmek.kmp_frontend.navigation.tools.NavigatorAccessor
+import th.skylabmek.kmp_frontend.shared_resources.Res
+import th.skylabmek.kmp_frontend.shared_resources.*
 import th.skylabmek.kmp_frontend.ui.navigation.NavItemIcon
 
 /**
@@ -66,7 +78,7 @@ fun AppDrawer(
                                 .verticalScroll(rememberScrollState())
                         ) {
                             Text(
-                                text = "Menu",
+                                text = stringResource(Res.string.nav_menu),
                                 style = MaterialTheme.typography.titleLarge,
                                 modifier = Modifier.padding(vertical = 16.dp)
                             )
@@ -101,13 +113,48 @@ fun AppDrawer(
                             // Personal UI Section
                             HorizontalDivider()
                             Spacer(modifier = Modifier.height(16.dp))
+                            
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = stringResource(Res.string.app_dev_name),
+                                        style = MaterialTheme.typography.titleMedium
+                                    )
+                                    Text(
+                                        text = stringResource(Res.string.app_dev_role),
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                                
+                                // Subtle icon indicating admin/settings
+                                Icon(
+                                    imageVector = Icons.Default.AdminPanelSettings,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(20.dp)
+                                        .alpha(0.3f),
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                            
+                            Spacer(modifier = Modifier.height(8.dp))
+                            
+                            // Clickable Secret Admin Link
                             Text(
-                                text = "Skylabmek",
-                                style = MaterialTheme.typography.titleMedium
-                            )
-                            Text(
-                                text = "Fullstack Developer / KMP Enthusiast",
-                                style = MaterialTheme.typography.bodySmall,
+                                text = stringResource(Res.string.profile_admin),
+                                style = MaterialTheme.typography.labelSmall,
+                                modifier = Modifier
+                                    .alpha(0.2f)
+                                    .clickable {
+                                        scope.launch { drawerState.close() }
+                                        navigator.navigate(ProfileNavKey.Profile)
+                                    },
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }

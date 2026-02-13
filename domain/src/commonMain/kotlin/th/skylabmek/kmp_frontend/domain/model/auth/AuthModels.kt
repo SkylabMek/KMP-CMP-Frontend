@@ -7,7 +7,17 @@ import kotlinx.serialization.Serializable
 data class TokenResult(
     @SerialName("access_token") val accessToken: String,
     @SerialName("refresh_token") val refreshToken: String,
-    @SerialName("expires_in") val expiresIn: Int
+    @SerialName("expires_in") val expiresIn: Int,
+    @SerialName("refresh_token_expires_in") val refreshTokenExpiresIn: Int? = null,
+    @SerialName("token_type") val tokenType: String? = null,
+    val user: UserInfo? = null
+)
+
+@Serializable
+data class UserInfo(
+    val id: String,
+    val username: String,
+    val role: String
 )
 
 @Serializable

@@ -66,12 +66,7 @@ fun rememberAppNavigationState(
                 icon = Icons.Default.Home
             ),
             null, // Placeholder for "Coming Soon"
-            null,
-            NavItemIcon(
-                title = "Profile",
-                key = ProfileNavKey.Profile,
-                icon = Icons.Default.Person
-            )
+            null
         )
     }
 

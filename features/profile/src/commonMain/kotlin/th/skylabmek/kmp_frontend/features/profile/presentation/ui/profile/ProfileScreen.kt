@@ -26,6 +26,7 @@ import th.skylabmek.kmp_frontend.domain.model.auth.MeResult
 import th.skylabmek.kmp_frontend.domain.model.profile.Announce
 import th.skylabmek.kmp_frontend.domain.model.profile.LifeStatus
 import th.skylabmek.kmp_frontend.domain.model.profile.Performance
+import th.skylabmek.kmp_frontend.domain.model.profile.Profile
 import th.skylabmek.kmp_frontend.features.profile.navigation.ProfileNavKey
 import th.skylabmek.kmp_frontend.features.profile.presentation.viewmodel.ProfileViewModel
 import th.skylabmek.kmp_frontend.navigation.tools.NavigatorAccessor
@@ -41,12 +42,13 @@ fun ProfileScreen(
 ) {
     val navigator = NavigatorAccessor.current
     val meState by viewModel.meState.collectAsState()
+    val basicDataState by viewModel.getOrLoadProfileBasicData(profileId).collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.loadMe()
     }
 
-    Box(modifier = Modifier.fillMaxWidth()) {
+    Box(modifier = Modifier.fillMaxSize()) {
         when (val state = meState) {
             is UiState.Loading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             is UiState.Error -> Column(
@@ -62,10 +64,31 @@ fun ProfileScreen(
                     Text("Login")
                 }
             }
-            is UiState.Success -> MeProfileContent(
-                me = state.data,
-                onLogout = { viewModel.logout() }
-            )
+            is UiState.Success -> {
+                val me = state.data
+                when (val basicData = basicDataState) {
+                    is UiState.Loading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                    is UiState.Success -> {
+                        MeProfileContent(
+                            me = me,
+                            profile = basicData.data.profile,
+                            onLogout = { viewModel.logout() },
+                            onNavigateToPerformance = { 
+                                val idToNavigate = basicData.data.profile?.id ?: me.id
+                                navigator.navigate(ProfileNavKey.Performance(idToNavigate)) 
+                            }
+                        )
+                    }
+                    is UiState.Error -> {
+                        MeProfileContent(
+                            me = me,
+                            profile = null,
+                            onLogout = { viewModel.logout() },
+                            onNavigateToPerformance = { navigator.navigate(ProfileNavKey.Performance(me.id)) }
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -73,7 +96,9 @@ fun ProfileScreen(
 @Composable
 fun MeProfileContent(
     me: MeResult,
-    onLogout: () -> Unit
+    profile: Profile?,
+    onLogout: () -> Unit,
+    onNavigateToPerformance: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -104,25 +129,45 @@ fun MeProfileContent(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
+        profile?.id?.let {
+            Text(
+                text = "Profile ID: $it",
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.secondary
+            )
+        }
+
         Spacer(modifier = Modifier.height(24.dp))
 
-        Row(
+        Column(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Button(
-                onClick = { /* Handle Refresh/Update */ },
-                modifier = Modifier.weight(1f)
+                onClick = onNavigateToPerformance,
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Update Profile")
+                Text("View Performances")
             }
 
-            OutlinedButton(
-                onClick = onLogout,
-                modifier = Modifier.weight(1f),
-                colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text("Logout")
+                Button(
+                    onClick = { /* Handle Refresh/Update */ },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Update Profile")
+                }
+
+                OutlinedButton(
+                    onClick = onLogout,
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error)
+                ) {
+                    Text("Logout")
+                }
             }
         }
     }

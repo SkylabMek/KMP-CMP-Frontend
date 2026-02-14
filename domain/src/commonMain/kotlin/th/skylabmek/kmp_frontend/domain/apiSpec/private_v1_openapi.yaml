@@ -91,6 +91,24 @@ components:
           $ref: '#/components/schemas/PerformanceContentResult'
         error:
           $ref: '#/components/schemas/ApiError'
+    ApiResponse_PerformanceListResult:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/PerformanceListResult'
+        error:
+          $ref: '#/components/schemas/ApiError'
+    ApiResponse_ProfileResult:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/ProfileResult'
+        error:
+          $ref: '#/components/schemas/ApiError'
     ImageResult:
       type: object
       properties:
@@ -122,6 +140,19 @@ components:
           type: string
         usage_count:
           type: integer
+          nullable: true
+    ProfileResult:
+      type: object
+      properties:
+        profile:
+          $ref: '#/components/schemas/Profile'
+    Profile:
+      type: object
+      properties:
+        id:
+          type: string
+        current_status_id:
+          type: string
           nullable: true
     ImageListResult:
       type: object
@@ -234,6 +265,53 @@ components:
           type: integer
         images_removed:
           type: integer
+    Performance:
+      type: object
+      properties:
+        id:
+          type: string
+        profile_id:
+          type: string
+        category_id:
+          type: string
+        visibility_id:
+          type: string
+        title:
+          type: string
+        summary:
+          type: string
+          nullable: true
+        content_url:
+          type: string
+          nullable: true
+        content_type:
+          type: string
+        content_preview:
+          type: string
+          nullable: true
+        start_date:
+          type: string
+          nullable: true
+        end_date:
+          type: string
+          nullable: true
+        location:
+          type: string
+          nullable: true
+        close:
+          type: boolean
+        created_at:
+          type: string
+        updated_at:
+          type: string
+          nullable: true
+    PerformanceListResult:
+      type: object
+      properties:
+        performances:
+          type: array
+          items:
+            $ref: '#/components/schemas/Performance'
     CreatePerformanceRequest:
       type: object
       required: [category_id, visibility_id, title]
@@ -295,6 +373,24 @@ components:
         performance_id:
           type: string
 paths:
+  /profiles/{profile_id}:
+    get:
+      summary: Get profile
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: profile_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse_ProfileResult'
   /profiles/{profile_id}/images:
     post:
       summary: Upload image
@@ -558,6 +654,23 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse_MessageResult'
   /profiles/{profile_id}/performances:
+    get:
+      summary: Get performances list
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: profile_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Performances list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse_PerformanceListResult'
     post:
       summary: Create performance
       security:

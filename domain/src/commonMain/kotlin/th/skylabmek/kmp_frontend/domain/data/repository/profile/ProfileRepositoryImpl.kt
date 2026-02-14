@@ -9,11 +9,21 @@ import th.skylabmek.kmp_frontend.domain.model.profile.AnnounceResponse
 import th.skylabmek.kmp_frontend.domain.model.profile.LifeStatus
 import th.skylabmek.kmp_frontend.domain.model.profile.Performance
 import th.skylabmek.kmp_frontend.domain.model.profile.PerformanceGroup
+import th.skylabmek.kmp_frontend.domain.model.profile.ProfileResult
 import th.skylabmek.kmp_frontend.domain.repository.profile.ProfileRepository
 
 class ProfileRepositoryImpl(
     private val networkClient: NetworkClient
 ) : ProfileRepository {
+
+    override suspend fun getProfile(profileId: String): NetworkResult<ProfileResult> {
+        return networkClient.executeWrapped(
+            reqSpec = RequestSpec(
+                method = HttpMethod.Get,
+                path = "/profiles/$profileId"
+            ),
+        )
+    }
 
     override suspend fun getAnnounces(profileId: String): NetworkResult<AnnounceResponse> {
         return networkClient.executeWrapped(

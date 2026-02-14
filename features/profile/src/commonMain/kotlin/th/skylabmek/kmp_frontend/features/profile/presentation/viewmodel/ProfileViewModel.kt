@@ -17,6 +17,7 @@ import th.skylabmek.kmp_frontend.domain.model.auth.MeResult
 import th.skylabmek.kmp_frontend.domain.model.profile.Announce
 import th.skylabmek.kmp_frontend.domain.model.profile.LifeStatus
 import th.skylabmek.kmp_frontend.domain.model.profile.Performance
+import th.skylabmek.kmp_frontend.domain.model.profile.Profile
 import th.skylabmek.kmp_frontend.domain.repository.auth.AuthRepository
 import th.skylabmek.kmp_frontend.domain.repository.profile.ProfileRepository
 import th.skylabmek.kmp_frontend.features.profile.presentation.ui.profile.LoginState
@@ -25,7 +26,8 @@ import th.skylabmek.kmp_frontend.shared_resources.error_unknown
 
 data class ProfileBasicData(
     val lifeStatus: LifeStatus,
-    val announces: List<Announce>
+    val announces: List<Announce>,
+    val profile: Profile? = null
 )
 
 class ProfileViewModel(
@@ -116,19 +118,23 @@ class ProfileViewModel(
             
             val lifeStatusResult = profileRepository.getLifeStatus(profileId)
             val announcesResult = profileRepository.getAnnounces(profileId)
+            val profileResult = profileRepository.getProfile(profileId)
 
             if (lifeStatusResult is NetworkResult.Success && 
-                announcesResult is NetworkResult.Success) {
+                announcesResult is NetworkResult.Success &&
+                profileResult is NetworkResult.Success) {
                 _uiState.value = UiState.Success(
                     ProfileBasicData(
                         lifeStatus = lifeStatusResult.data,
-                        announces = announcesResult.data.items
+                        announces = announcesResult.data.items,
+                        profile = profileResult.data.profile
                     )
                 )
             } else {
                 val networkError = when {
                     lifeStatusResult is NetworkResult.Failure -> lifeStatusResult.error
                     announcesResult is NetworkResult.Failure -> announcesResult.error
+                    profileResult is NetworkResult.Failure -> profileResult.error
                     else -> th.skylabmek.kmp_frontend.core.network.result.NetworkError.Unknown(Throwable("Unknown error"))
                 }
                 _uiState.value = UiState.Error(

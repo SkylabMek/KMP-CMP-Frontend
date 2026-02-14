@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidKMPLibrary)
@@ -24,6 +26,17 @@ kotlin {
         }.configure {
             instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
+    }
+
+    jvm()
+
+    js {
+        browser()
+    }
+
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        browser()
     }
 
     // For iOS targets, this is also where you should
@@ -80,6 +93,9 @@ kotlin {
                 // Koin
                 implementation(libs.koin.compose)
                 implementation(libs.koin.compose.viewmodel)
+
+                // Markdown
+                implementation(libs.markdown.renderer)
             }
         }
 

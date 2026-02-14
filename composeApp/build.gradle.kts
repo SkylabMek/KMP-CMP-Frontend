@@ -60,6 +60,7 @@ kotlin {
                 implementation(project(":features:app"))
                 implementation(project(":features:profile"))
                 implementation(project(":features:home"))
+                implementation(project(":features:performance"))
 
                 implementation(libs.kotlinx.datetime)
 

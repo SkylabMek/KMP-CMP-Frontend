@@ -10,4 +10,7 @@ sealed interface ProfileNavKey : NavKey {
 
     @Serializable
     data object Login : ProfileNavKey
+
+    @Serializable
+    data class Performance(val profileId: String) : ProfileNavKey
 }

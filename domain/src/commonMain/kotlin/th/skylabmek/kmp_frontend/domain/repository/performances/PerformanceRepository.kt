@@ -4,6 +4,14 @@ import th.skylabmek.kmp_frontend.core.network.result.NetworkResult
 import th.skylabmek.kmp_frontend.domain.model.performances.*
 
 interface PerformanceRepository {
+    suspend fun getPerformances(
+        profileId: String
+    ): NetworkResult<PerformanceListResult>
+
+    suspend fun getPublicPerformances(
+        profileId: String
+    ): NetworkResult<PerformanceListResult>
+
     suspend fun createPerformance(
         profileId: String,
         request: CreatePerformanceRequest

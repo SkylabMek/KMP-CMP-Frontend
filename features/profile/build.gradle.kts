@@ -87,6 +87,8 @@ kotlin {
                 implementation(project(":domain"))
                 implementation(project(":shared-resources"))
                 implementation(project(":core:data-local"))
+                implementation(project(":features:performance"))
+                implementation(project(":features:app"))
                 implementation(libs.kotlin.stdlib)
 
                 implementation(libs.bundles.composeMaterial3)

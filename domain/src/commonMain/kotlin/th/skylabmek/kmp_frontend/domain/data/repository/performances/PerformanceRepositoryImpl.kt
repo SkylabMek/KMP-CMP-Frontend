@@ -12,6 +12,24 @@ class PerformanceRepositoryImpl(
     private val networkClient: NetworkClient
 ) : PerformanceRepository {
 
+    override suspend fun getPerformances(profileId: String): NetworkResult<PerformanceListResult> {
+        return networkClient.executeWrapped(
+            reqSpec = RequestSpec(
+                method = HttpMethod.Get,
+                path = "/profiles/$profileId/performances"
+            )
+        )
+    }
+
+    override suspend fun getPublicPerformances(profileId: String): NetworkResult<PerformanceListResult> {
+        return networkClient.executeWrapped(
+            reqSpec = RequestSpec(
+                method = HttpMethod.Get,
+                path = "/profiles/$profileId/publicPerformances"
+            )
+        )
+    }
+
     override suspend fun createPerformance(
         profileId: String,
         request: CreatePerformanceRequest

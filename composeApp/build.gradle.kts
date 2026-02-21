@@ -57,10 +57,10 @@ kotlin {
                 implementation(project(":core:network"))
                 implementation(project(":core:common"))
                 implementation(project(":core:data-local"))
-                implementation(project(":features:app"))
-                implementation(project(":features:profile"))
-                implementation(project(":features:home"))
-                implementation(project(":features:performance"))
+                implementation(project(":features:feature:app"))
+                implementation(project(":features:app_features:profile"))
+                implementation(project(":features:app_features:home"))
+                implementation(project(":features:feature:performance"))
 
                 implementation(libs.kotlinx.datetime)
 

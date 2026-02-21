@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
-import th.skylabmek.kmp_frontend.features.profile.navigation.ProfileNavKey
+import th.skylabmek.kmp_frontend.features.app_features.profile.navigation.ProfileNavKey
 import th.skylabmek.kmp_frontend.navigation.tools.NavigatorAccessor
 import th.skylabmek.kmp_frontend.shared_resources.Res
 import th.skylabmek.kmp_frontend.shared_resources.*

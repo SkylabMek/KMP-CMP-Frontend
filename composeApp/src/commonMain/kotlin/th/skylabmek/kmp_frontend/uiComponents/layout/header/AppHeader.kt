@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import th.skylabmek.kmp_frontend.core.common.UiState
 import th.skylabmek.kmp_frontend.domain.model.profile.LifeStatus
-import th.skylabmek.kmp_frontend.features.profile.components.lifeStatus.LifeStatusIndicatorWithTooltip
+import th.skylabmek.kmp_frontend.features.app_features.profile.components.lifeStatus.LifeStatusIndicatorWithTooltip
 import th.skylabmek.kmp_frontend.navigation.tools.NavigatorAccessor
 import th.skylabmek.kmp_frontend.shared_resources.Res
 import th.skylabmek.kmp_frontend.shared_resources.header_menu_icon_desc

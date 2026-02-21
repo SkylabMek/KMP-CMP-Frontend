@@ -15,7 +15,7 @@ import th.skylabmek.kmp_frontend.core.data_local.domain.LocalSettingsRepository
 import th.skylabmek.kmp_frontend.domain.model.auth.RefreshRequest
 import th.skylabmek.kmp_frontend.domain.model.profile.LifeStatus
 import th.skylabmek.kmp_frontend.domain.repository.auth.AuthRepository
-import th.skylabmek.kmp_frontend.features.profile.presentation.viewmodel.ProfileViewModel
+import th.skylabmek.kmp_frontend.features.app_features.profile.presentation.viewmodel.ProfileViewModel
 import th.skylabmek.kmp_frontend.ui.config.ThemeSetting
 import kotlin.time.Clock
 

@@ -91,3 +91,33 @@ data class Performance(
 data class PerformanceListResult(
     val performances: List<Performance>
 )
+
+@Serializable
+data class ImageResult(
+    val id: String,
+    @SerialName("storage_url") val storageUrl: String,
+    val filename: String,
+    @SerialName("original_filename") val originalFilename: String,
+    val width: Int? = null,
+    val height: Int? = null,
+    @SerialName("file_size") val fileSize: Int,
+    @SerialName("mime_type") val mimeType: String,
+    @SerialName("alt_text") val altText: String? = null,
+    val caption: String? = null,
+    @SerialName("created_at") val createdAt: String,
+    @SerialName("usage_count") val usageCount: Int? = null
+)
+
+@Serializable
+data class ImageListResult(
+    val images: List<ImageResult>,
+    val total: Int,
+    val limit: Int,
+    val offset: Int
+)
+
+@Serializable
+data class MessageResult(
+    val message: String,
+    val id: String? = null
+)

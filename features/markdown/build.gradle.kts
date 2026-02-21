@@ -74,6 +74,9 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
+                implementation(project(":ui"))
+                implementation(project(":core:common"))
+
                 implementation(libs.kotlin.stdlib)
                 // Add KMP dependencies here
 
@@ -96,6 +99,7 @@ kotlin {
 
                 // Markdown
                 implementation(libs.markdown.renderer)
+                implementation(libs.markdown.renderer.coil3)
             }
         }
 

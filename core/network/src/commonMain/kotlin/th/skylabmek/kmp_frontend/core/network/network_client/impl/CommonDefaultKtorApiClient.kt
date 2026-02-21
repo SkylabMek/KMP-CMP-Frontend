@@ -10,6 +10,7 @@ import io.ktor.http.contentType
 import io.ktor.http.encodedPath
 import io.ktor.http.isSuccess
 import io.ktor.http.takeFrom
+import io.ktor.http.content.OutgoingContent
 import th.skylabmek.kmp_frontend.core.data_local.domain.LocalSettingsRepository
 import th.skylabmek.kmp_frontend.core.network.config.NetworkConfig
 import th.skylabmek.kmp_frontend.core.network.client.HttpClientProvider
@@ -51,9 +52,11 @@ class CommonDefaultKtorApiClient(
                     }
                 })
                 
-                reqSpec.body?.let { 
-                    contentType(ContentType.Application.Json)
-                    setBody(it) 
+                reqSpec.body?.let { body ->
+                    if (body !is OutgoingContent) {
+                        contentType(ContentType.Application.Json)
+                    }
+                    setBody(body)
                 }
             }
 

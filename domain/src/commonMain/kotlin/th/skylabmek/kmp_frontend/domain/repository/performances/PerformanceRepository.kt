@@ -32,10 +32,35 @@ interface PerformanceRepository {
         profileId: String,
         performanceId: String
     ): NetworkResult<PerformanceContentResult>
+    
+    suspend fun getPerformanceContentFromUrl(
+        url: String
+    ): NetworkResult<String>
 
     suspend fun updatePerformanceContent(
         profileId: String,
         performanceId: String,
         request: UpdatePerformanceContentRequest
     ): NetworkResult<PerformanceContentUpdateResult>
+
+    suspend fun getImages(
+        profileId: String,
+        search: String? = null,
+        limit: Int? = null,
+        offset: Int? = null
+    ): NetworkResult<ImageListResult>
+
+    suspend fun uploadImage(
+        profileId: String,
+        fileBytes: ByteArray,
+        fileName: String,
+        mimeType: String,
+        altText: String? = null,
+        caption: String? = null
+    ): NetworkResult<ImageResult>
+
+    suspend fun forceDeleteImage(
+        profileId: String,
+        imageId: String
+    ): NetworkResult<MessageResult>
 }

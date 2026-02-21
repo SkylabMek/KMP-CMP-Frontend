@@ -4,12 +4,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import org.koin.compose.viewmodel.koinViewModel
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import th.skylabmek.kmp_frontend.features.app.presentation.viewmodel.AppViewModel
 import th.skylabmek.kmp_frontend.features.performance.presentation.ui.performance.PerformanceSection
 import th.skylabmek.kmp_frontend.features.performance.presentation.components.performance.PerformanceFullContent
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PerformanceScreen(
     appViewModel: AppViewModel,
@@ -17,33 +18,44 @@ fun PerformanceScreen(
     appId: String = "skylabmek-portfolio" // Default or injected appId
 ) {
     var selectedPerformanceId by remember { mutableStateOf<String?>(null) }
-    val sheetState = rememberModalBottomSheetState()
-    var showBottomSheet by remember { mutableStateOf(false) }
 
-
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
         PerformanceSection(
             appViewModel = appViewModel,
             onPerformanceClick = { id ->
                 selectedPerformanceId = id
-                showBottomSheet = true
             },
             profileId = profileId,
             appId = appId,
         )
+    }
 
-    if (showBottomSheet && selectedPerformanceId != null) {
-        ModalBottomSheet(
-            onDismissRequest = {
-                showBottomSheet = false
-                selectedPerformanceId = null
-            },
-            sheetState = sheetState,
-            modifier = Modifier.fillMaxHeight(0.9f)
-        ) {
-            PerformanceFullContent(
-                profileId = profileId,
-                performanceId = selectedPerformanceId!!
+    if (selectedPerformanceId != null) {
+        Dialog(
+            onDismissRequest = { selectedPerformanceId = null },
+            properties = DialogProperties(
+                usePlatformDefaultWidth = false
             )
+        ) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth(0.95f)
+                    .fillMaxHeight(0.85f),
+                shape = MaterialTheme.shapes.extraLarge,
+                color = MaterialTheme.colorScheme.surface,
+                tonalElevation = 6.dp
+            ) {
+                PerformanceFullContent(
+                    profileId = profileId,
+                    performanceId = selectedPerformanceId!!,
+                    onClose = { selectedPerformanceId = null },
+//                    onEdit = { /* TODO: Implement navigation to edit screen */ }
+                )
+            }
         }
     }
 }

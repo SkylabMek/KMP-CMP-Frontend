@@ -1,6 +1,11 @@
 package th.skylabmek.kmp_frontend.domain.data.repository.performances
 
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpMethod
+import io.ktor.client.request.forms.formData
+import io.ktor.client.request.forms.MultiPartFormDataContent
+import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
 import th.skylabmek.kmp_frontend.core.network.network_client.NetworkClient
 import th.skylabmek.kmp_frontend.core.network.network_client.executeWrapped
 import th.skylabmek.kmp_frontend.core.network.request.RequestSpec
@@ -81,6 +86,16 @@ class PerformanceRepositoryImpl(
         )
     }
 
+    override suspend fun getPerformanceContentFromUrl(url: String): NetworkResult<String> {
+        return networkClient.execute(
+            reqSpec = RequestSpec(
+                method = HttpMethod.Get,
+                path = url
+            ),
+            mapper = { it.bodyAsText() }
+        )
+    }
+
     override suspend fun updatePerformanceContent(
         profileId: String,
         performanceId: String,
@@ -91,6 +106,65 @@ class PerformanceRepositoryImpl(
                 method = HttpMethod.Patch,
                 path = "/profiles/$profileId/performances/$performanceId/content",
                 body = request
+            )
+        )
+    }
+
+    override suspend fun getImages(
+        profileId: String,
+        search: String?,
+        limit: Int?,
+        offset: Int?
+    ): NetworkResult<ImageListResult> {
+        var pathWithParams = "/profiles/$profileId/images"
+        val params = mutableListOf<String>()
+        search?.let { params.add("search=$it") }
+        limit?.let { params.add("limit=$it") }
+        offset?.let { params.add("offset=$it") }
+
+        if (params.isNotEmpty()) {
+            pathWithParams += "?" + params.joinToString("&")
+        }
+
+        return networkClient.executeWrapped(
+            reqSpec = RequestSpec(
+                method = HttpMethod.Get,
+                path = pathWithParams
+            )
+        )
+    }
+
+    override suspend fun uploadImage(
+        profileId: String,
+        fileBytes: ByteArray,
+        fileName: String,
+        mimeType: String,
+        altText: String?,
+        caption: String?
+    ): NetworkResult<ImageResult> {
+        return networkClient.executeWrapped(
+            reqSpec = RequestSpec(
+                method = HttpMethod.Post,
+                path = "/profiles/$profileId/images",
+                body = MultiPartFormDataContent(
+                    formData {
+                        append("file", fileBytes, Headers.build {
+                            append(HttpHeaders.ContentType, mimeType)
+                            append(HttpHeaders.ContentDisposition, "filename=\"$fileName\"")
+                        })
+                        altText?.let { append("alt_text", it) }
+                        caption?.let { append("caption", it) }
+                    }
+                )
+            )
+        )
+    }
+
+    override suspend fun forceDeleteImage(profileId: String, imageId: String): NetworkResult<MessageResult> {
+        return networkClient.executeWrapped(
+            reqSpec = RequestSpec(
+                method = HttpMethod.Delete,
+                path = "/profiles/$profileId/images/$imageId/force"
             )
         )
     }

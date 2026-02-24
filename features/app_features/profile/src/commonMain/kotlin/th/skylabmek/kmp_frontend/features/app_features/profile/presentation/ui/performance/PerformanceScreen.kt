@@ -7,9 +7,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import th.skylabmek.kmp_frontend.domain.model.performances.Performance
 import th.skylabmek.kmp_frontend.features.feature.app.presentation.viewmodel.AppViewModel
 import th.skylabmek.kmp_frontend.features.feature.performance.presentation.ui.performance.PerformanceSection
-import th.skylabmek.kmp_frontend.features.feature.performance.presentation.components.performance.PerformanceFullContent
+import th.skylabmek.kmp_frontend.features.feature.performance.presentation.components.performance.privatePerformance.PerformanceFullContent
 
 @Composable
 fun PerformanceScreen(
@@ -17,7 +18,7 @@ fun PerformanceScreen(
     profileId: String,
     appId: String = "skylabmek-portfolio" // Default or injected appId
 ) {
-    var selectedPerformanceId by remember { mutableStateOf<String?>(null) }
+    var selectedPerformance by remember { mutableStateOf<Performance?>(null) }
 
     Column(
         modifier = Modifier
@@ -26,17 +27,17 @@ fun PerformanceScreen(
     ) {
         PerformanceSection(
             appViewModel = appViewModel,
-            onPerformanceClick = { id ->
-                selectedPerformanceId = id
+            onPerformanceClick = { performance ->
+                selectedPerformance = performance
             },
             profileId = profileId,
             appId = appId,
         )
     }
 
-    if (selectedPerformanceId != null) {
+    if (selectedPerformance != null) {
         Dialog(
-            onDismissRequest = { selectedPerformanceId = null },
+            onDismissRequest = { selectedPerformance = null },
             properties = DialogProperties(
                 usePlatformDefaultWidth = false
             )
@@ -50,10 +51,9 @@ fun PerformanceScreen(
                 tonalElevation = 6.dp
             ) {
                 PerformanceFullContent(
+                    performance = selectedPerformance!!,
                     profileId = profileId,
-                    performanceId = selectedPerformanceId!!,
-                    onClose = { selectedPerformanceId = null },
-//                    onEdit = { /* TODO: Implement navigation to edit screen */ }
+                    onClose = { selectedPerformance = null }
                 )
             }
         }

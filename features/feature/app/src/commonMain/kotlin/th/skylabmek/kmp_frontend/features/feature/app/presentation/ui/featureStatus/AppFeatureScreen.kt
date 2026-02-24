@@ -14,9 +14,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.viewmodel.koinViewModel
 import th.skylabmek.kmp_frontend.core.common.UiState
-import th.skylabmek.kmp_frontend.core.common.errorMessage
+import th.skylabmek.kmp_frontend.core.common.asString
 import th.skylabmek.kmp_frontend.domain.model.feature.AppFeatureStatus
-import th.skylabmek.kmp_frontend.features.feature.app.presentation.viewmodel.AppViewModel
 import th.skylabmek.kmp_frontend.features.feature.app.presentation.viewmodel.AppViewModel
 
 @Composable
@@ -52,7 +51,7 @@ fun AppFeatureScreen(
             }
             is UiState.Error -> {
                 Text(
-                    text = state.uiError.errorMessage()(),
+                    text = state.uiError.asString(),
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodyLarge
                 )

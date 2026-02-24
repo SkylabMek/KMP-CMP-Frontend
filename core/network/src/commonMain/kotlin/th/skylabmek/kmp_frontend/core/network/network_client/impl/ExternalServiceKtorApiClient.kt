@@ -19,7 +19,7 @@ import th.skylabmek.kmp_frontend.core.network.result.toNetworkError
  * It ignores global app headers and focuses on the specific config provided for the external service.
  */
 class ExternalServiceKtorApiClient(
-    private val httpClientProvider: HttpClientProvider,
+    override val httpClientProvider: HttpClientProvider,
     private val serviceConfig: NetworkConfig
 ) : NetworkClient {
 

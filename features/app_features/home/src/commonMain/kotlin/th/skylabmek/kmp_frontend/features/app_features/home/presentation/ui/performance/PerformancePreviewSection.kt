@@ -2,9 +2,7 @@ package th.skylabmek.kmp_frontend.features.app_features.home.presentation.ui.per
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
@@ -14,9 +12,8 @@ import org.jetbrains.compose.resources.stringResource
 import th.skylabmek.kmp_frontend.core.common.UiState
 import th.skylabmek.kmp_frontend.domain.model.feature.FeatureCode
 import th.skylabmek.kmp_frontend.domain.model.feature.FeatureStatusCode
-import th.skylabmek.kmp_frontend.domain.model.profile.Performance
 import th.skylabmek.kmp_frontend.features.feature.app.presentation.viewmodel.AppViewModel
-import th.skylabmek.kmp_frontend.features.app_features.profile.presentation.ui.profile.PerformanceGrid
+import th.skylabmek.kmp_frontend.features.feature.performance.model.PerformanceCategoryUi
 import th.skylabmek.kmp_frontend.features.app_features.profile.presentation.viewmodel.ProfileViewModel
 import th.skylabmek.kmp_frontend.shared_resources.Res
 import th.skylabmek.kmp_frontend.shared_resources.*
@@ -34,6 +31,11 @@ fun PerformancePreviewSection(
     profileId: String,
     modifier: Modifier = Modifier
 ) {
+    // Ensure data is fetched when this section is composed
+    LaunchedEffect(profileId) {
+        profileViewModel.loadProfileBasicData(profileId)
+    }
+
     val featureStatusState by appViewModel.getFeatureStatusByCode(
         appId,
         FeatureCode.SHOW_PERFORMANCE
@@ -57,7 +59,30 @@ fun PerformancePreviewSection(
                     is UiState.Success -> {
                         when (val statusCode = state.data) {
                             FeatureStatusCode.OPERATIONAL -> {
-                                PerformancePreviewContent(profileUiState, profileId, profileViewModel)
+                                PerformancePreviewGridContent(
+                                    profileUiState = profileUiState,
+                                    profileId = profileId,
+                                    onRetry = { profileViewModel.loadProfileBasicData(profileId) },
+                                    filter = { it.categoryId != PerformanceCategoryUi.DEMO.id },
+                                    maxItems = 6,
+                                    emptyMessage = "No performances available.",
+                                    header = {
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.SpaceBetween,
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Text(
+                                                text = stringResource(Res.string.feature_name_show_performance),
+                                                style = MaterialTheme.typography.titleMedium,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                            TextButton(onClick = { /* Navigate to full performance screen */ }) {
+                                                Text("See All")
+                                            }
+                                        }
+                                    }
+                                )
                             }
 
                             FeatureStatusCode.UNDER_CONSTRUCTION -> {
@@ -79,47 +104,6 @@ fun PerformancePreviewSection(
                         )
                     }
                 }
-            }
-        }
-    }
-}
-
-@Composable
-private fun PerformancePreviewContent(
-    profileUiState: UiState<List<Performance>>,
-    profileId: String,
-    profileViewModel: ProfileViewModel,
-    modifier: Modifier = Modifier
-) {
-    Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(Dimens.spaceSmall)) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = stringResource(Res.string.feature_name_show_performance),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-            TextButton(onClick = { /* Navigate to full performance screen */ }) {
-                Text("See All")
-            }
-        }
-        when (profileUiState) {
-            is UiState.Loading -> DefaultLoadingContent(modifier = Modifier.height(Dimens.containerMaxWidth / 12))
-
-            is UiState.Error -> {
-                DefaultErrorContent(
-                    error = profileUiState.uiError,
-                    onRetry = { profileViewModel.loadProfileBasicData(profileId) }
-                )
-            }
-
-            is UiState.Success -> {
-                val performances =
-                    profileUiState.data.take(4) // Preview only first 4
-                PerformanceGrid(performances = performances)
             }
         }
     }

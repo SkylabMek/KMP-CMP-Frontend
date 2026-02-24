@@ -20,9 +20,9 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import th.skylabmek.kmp_frontend.core.common.UiState
 import th.skylabmek.kmp_frontend.domain.model.auth.MeResult
+import th.skylabmek.kmp_frontend.domain.model.performances.Performance
 import th.skylabmek.kmp_frontend.domain.model.profile.Announce
 import th.skylabmek.kmp_frontend.domain.model.profile.LifeStatus
-import th.skylabmek.kmp_frontend.domain.model.profile.Performance
 import th.skylabmek.kmp_frontend.domain.model.profile.Profile
 import th.skylabmek.kmp_frontend.features.app_features.profile.navigation.ProfileNavKey
 import th.skylabmek.kmp_frontend.features.app_features.profile.presentation.viewmodel.ProfileViewModel

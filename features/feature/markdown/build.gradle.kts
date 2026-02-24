@@ -76,6 +76,7 @@ kotlin {
             dependencies {
                 implementation(project(":ui"))
                 implementation(project(":core:common"))
+                implementation(project(":shared-resources"))
 
                 implementation(libs.kotlin.stdlib)
                 // Add KMP dependencies here

@@ -15,9 +15,9 @@ import th.skylabmek.kmp_frontend.core.network.result.NetworkResult
 import th.skylabmek.kmp_frontend.domain.model.auth.LoginRequest
 import th.skylabmek.kmp_frontend.domain.model.auth.LogoutRequest
 import th.skylabmek.kmp_frontend.domain.model.auth.MeResult
+import th.skylabmek.kmp_frontend.domain.model.performances.PerformanceListResult
 import th.skylabmek.kmp_frontend.domain.model.profile.Announce
 import th.skylabmek.kmp_frontend.domain.model.profile.LifeStatus
-import th.skylabmek.kmp_frontend.domain.model.profile.Performance
 import th.skylabmek.kmp_frontend.domain.model.profile.Profile
 import th.skylabmek.kmp_frontend.domain.repository.auth.AuthRepository
 import th.skylabmek.kmp_frontend.domain.repository.profile.ProfileRepository
@@ -42,8 +42,8 @@ class ProfileViewModel(
     private val _uiState = MutableStateFlow<UiState<ProfileBasicData>>(UiState.Loading)
     val uiState: StateFlow<UiState<ProfileBasicData>> = _uiState.asStateFlow()
 
-    private val _performancesState = MutableStateFlow<UiState<List<Performance>>>(UiState.Loading)
-    val performancesState: StateFlow<UiState<List<Performance>>> = _performancesState.asStateFlow()
+    private val _performancesState = MutableStateFlow<UiState<PerformanceListResult>>(UiState.Loading)
+    val performancesState: StateFlow<UiState<PerformanceListResult>> = _performancesState.asStateFlow()
 
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
     val loginState: StateFlow<LoginState> = _loginState.asStateFlow()
@@ -105,7 +105,7 @@ class ProfileViewModel(
         return uiState
     }
 
-    fun getOrLoadPerformances(profileId: String): StateFlow<UiState<List<Performance>>> {
+    fun getOrLoadPerformances(profileId: String): StateFlow<UiState<PerformanceListResult>> {
         if (!hasPerformancesLoadedOnce) {
             hasPerformancesLoadedOnce = true
             loadPerformances(profileId)
@@ -149,14 +149,16 @@ class ProfileViewModel(
         viewModelScope.launch {
             _performancesState.value = UiState.Loading
             
-            when (val result = profileRepository.getPerformances(profileId)) {
+            when (val result = profileRepository.getPublicPerformances(profileId)) {
                 is NetworkResult.Success -> {
                     _performancesState.value = UiState.Success(result.data)
+//                    println("data res is : " + result.data)
                 }
                 is NetworkResult.Failure -> {
                     _performancesState.value = UiState.Error(
                         UiError.StringRes(result.error.asStringResource())
                     )
+                    println("loadPerformances Failure with error: ${result.error}")
                 }
             }
         }

@@ -31,7 +31,7 @@ import th.skylabmek.kmp_frontend.ui.dimens.Dimens
 @Composable
 fun PerformanceSection(
     appViewModel: AppViewModel,
-    onPerformanceClick: (String) -> Unit,
+    onPerformanceClick: (Performance) -> Unit,
     performanceListViewModel: PerformanceListViewModel = koinViewModel(),
     appId: String,
     profileId: String,
@@ -68,26 +68,6 @@ fun PerformanceSection(
                             performanceListViewModel = performanceListViewModel,
                             onPerformanceClick = onPerformanceClick
                         )
-//                        when (val statusCode = state.data) {
-//                            FeatureStatusCode.OPERATIONAL -> {
-//                                PerformanceContent(
-//                                    performanceUiState = performanceUiState,
-//                                    profileId = profileId,
-//                                    performanceListViewModel = performanceListViewModel,
-//                                    onPerformanceClick = onPerformanceClick
-//                                )
-//                            }
-//
-//                            FeatureStatusCode.UNDER_CONSTRUCTION -> {
-//                                PerformanceConstruction(statusCode)
-//                            }
-//
-//                            else -> {
-//                                FeatureStatusStripped(
-//                                    statusCode = statusCode
-//                                )
-//                            }
-//                        }
                     }
 
                     is UiState.Error -> {
@@ -107,7 +87,7 @@ private fun PerformanceContent(
     performanceUiState: UiState<List<Performance>>,
     profileId: String,
     performanceListViewModel: PerformanceListViewModel,
-    onPerformanceClick: (String) -> Unit,
+    onPerformanceClick: (Performance) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(Dimens.spaceSmall)) {
@@ -134,83 +114,10 @@ private fun PerformanceContent(
 
             is UiState.Success -> {
                 val performances = performanceUiState.data
-                val mappedPerformances = performances.map { p ->
-                    th.skylabmek.kmp_frontend.domain.model.profile.Performance(
-                        id = p.id,
-                        profileId = p.profileId,
-                        categoryId = p.categoryId,
-                        visibilityId = p.visibilityId,
-                        title = p.title,
-                        summary = p.summary,
-                        content = p.contentUrl,
-                        startDate = p.startDate,
-                        endDate = p.endDate,
-                        location = p.location,
-                        close = if (p.close) 1 else 0,
-                        createdAt = p.createdAt,
-                        updatedAt = p.updatedAt
-                    )
-                }
-
                 PerformanceGrid(
-                    performances = mappedPerformances,
-                    onPerformanceClick = { performance -> onPerformanceClick(performance.id) }
+                    performances = performances,
+                    onPerformanceClick = onPerformanceClick
                 )
-            }
-        }
-    }
-}
-
-@Composable
-private fun PerformanceConstruction(statusCode: FeatureStatusCode) {
-    val uriHandler = LocalUriHandler.current
-    val notionUrl = stringResource(Res.string.url_temp_portfolio)
-    val oldSiteUrl = stringResource(Res.string.url_old_website)
-
-    Column(
-        verticalArrangement = Arrangement.spacedBy(Dimens.spaceMedium)
-    ) {
-        FeatureStatusStripped(statusCode = statusCode)
-
-        HorizontalDivider(
-            modifier = Modifier.padding(vertical = Dimens.spaceExtraSmall),
-            color = MaterialTheme.colorScheme.outlineVariant
-        )
-
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(Dimens.spaceSmall),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(
-                text = stringResource(Res.string.performance_preview_construction_title),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
-            )
-
-            Text(
-                text = stringResource(Res.string.performance_preview_construction_msg),
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(Dimens.spaceSmall),
-                modifier = Modifier.padding(top = Dimens.spaceSmall)
-            ) {
-                Button(
-                    onClick = { uriHandler.openUri(notionUrl) }
-                ) {
-                    Text(stringResource(Res.string.performance_preview_visit_notion))
-                }
-
-                OutlinedButton(
-                    onClick = { uriHandler.openUri(oldSiteUrl) }
-                ) {
-                    Text(stringResource(Res.string.performance_preview_visit_old_site))
-                }
             }
         }
     }

@@ -43,7 +43,7 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import kotlinx.coroutines.launch
 import th.skylabmek.kmp_frontend.core.common.UiState
-import th.skylabmek.kmp_frontend.core.common.errorMessage
+import th.skylabmek.kmp_frontend.core.common.asString
 import th.skylabmek.kmp_frontend.domain.model.profile.LifeStatus
 import th.skylabmek.kmp_frontend.ui.dimens.Dimens
 
@@ -227,7 +227,7 @@ private fun TooltipScope.LifeStatusTooltipContent(
                 }
             ) {
                 Text(
-                    text = uiState.uiError.errorMessage()(),
+                    text = uiState.uiError.asString(),
                     style = MaterialTheme.typography.bodySmall
                 )
             }
@@ -318,7 +318,7 @@ private fun LifeStatusPopupContent(
                         }
                         Spacer(modifier = Modifier.height(Dimens.spaceMedium))
                         Text(
-                            text = uiState.uiError.errorMessage()(),
+                            text = uiState.uiError.asString(),
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }

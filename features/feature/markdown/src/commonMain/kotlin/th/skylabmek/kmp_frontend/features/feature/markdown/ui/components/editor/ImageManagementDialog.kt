@@ -16,8 +16,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
+import org.jetbrains.compose.resources.stringResource
 import th.skylabmek.kmp_frontend.core.common.UiState
 import th.skylabmek.kmp_frontend.features.feature.markdown.model.MarkdownImage
+import th.skylabmek.kmp_frontend.shared_resources.Res
+import th.skylabmek.kmp_frontend.shared_resources.dialog_close
+import th.skylabmek.kmp_frontend.shared_resources.dialog_done
+import th.skylabmek.kmp_frontend.shared_resources.dialog_performance_delete_confirm
+import th.skylabmek.kmp_frontend.shared_resources.image_picker_delete_confirm_message
+import th.skylabmek.kmp_frontend.shared_resources.image_picker_delete_confirm_title
+import th.skylabmek.kmp_frontend.shared_resources.image_picker_loading_error
+import th.skylabmek.kmp_frontend.shared_resources.image_picker_manage_title
+import th.skylabmek.kmp_frontend.shared_resources.image_picker_no_images
+import th.skylabmek.kmp_frontend.shared_resources.image_picker_toggle_edit_mode
 import th.skylabmek.kmp_frontend.ui.components.dialog.ConfirmDialog
 
 @Composable
@@ -32,9 +43,9 @@ internal fun ImageManagementDialog(
 
     imageToDelete?.let { image ->
         ConfirmDialog(
-            title = "Delete Image",
-            message = "Are you sure you want to delete '${image.filename}'? This action cannot be undone.",
-            confirmText = "Delete",
+            title = stringResource(Res.string.image_picker_delete_confirm_title),
+            message = stringResource(Res.string.image_picker_delete_confirm_message, image.filename),
+            confirmText = stringResource(Res.string.dialog_performance_delete_confirm),
             isDangerous = true,
             onConfirm = { 
                 onDeleteImage(image)
@@ -52,17 +63,23 @@ internal fun ImageManagementDialog(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Manage Images", style = MaterialTheme.typography.titleLarge)
+                Text(
+                    stringResource(Res.string.image_picker_manage_title),
+                    style = MaterialTheme.typography.titleLarge
+                )
                 Row {
                     IconButton(onClick = { isEditMode = !isEditMode }) {
                         Icon(
                             imageVector = if (isEditMode) Icons.Default.CheckCircle else Icons.Default.Edit,
-                            contentDescription = "Toggle Edit Mode",
+                            contentDescription = stringResource(Res.string.image_picker_toggle_edit_mode),
                             tint = if (isEditMode) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
                         )
                     }
                     IconButton(onClick = onDismissRequest) {
-                        Icon(Icons.Default.Close, contentDescription = "Close")
+                        Icon(
+                            Icons.Default.Close,
+                            contentDescription = stringResource(Res.string.dialog_close)
+                        )
                     }
                 }
             }
@@ -73,11 +90,17 @@ internal fun ImageManagementDialog(
                     is UiState.Loading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator()
                     }
-                    is UiState.Error -> Text("Error loading images", color = MaterialTheme.colorScheme.error)
+                    is UiState.Error -> Text(
+                        stringResource(Res.string.image_picker_loading_error),
+                        color = MaterialTheme.colorScheme.error
+                    )
                     is UiState.Success -> {
                         val images = imageState.data.filterIsInstance<UiState.Success<MarkdownImage>>()
                         if (images.isEmpty()) {
-                            Text("No images uploaded yet.", modifier = Modifier.align(Alignment.Center))
+                            Text(
+                                stringResource(Res.string.image_picker_no_images),
+                                modifier = Modifier.align(Alignment.Center)
+                            )
                         } else {
                             LazyVerticalGrid(
                                 columns = GridCells.Fixed(3),
@@ -116,7 +139,7 @@ internal fun ImageManagementDialog(
                                             ) {
                                                 Icon(
                                                     Icons.Default.Delete,
-                                                    contentDescription = "Delete",
+                                                    contentDescription = stringResource(Res.string.dialog_performance_delete_confirm),
                                                     tint = MaterialTheme.colorScheme.onError,
                                                     modifier = Modifier.size(16.dp)
                                                 )
@@ -133,7 +156,7 @@ internal fun ImageManagementDialog(
         confirmButton = {
             if (isEditMode) {
                 TextButton(onClick = { isEditMode = false }) {
-                    Text("Done")
+                    Text(stringResource(Res.string.dialog_done))
                 }
             }
         }

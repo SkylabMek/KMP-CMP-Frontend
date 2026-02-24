@@ -15,8 +15,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
+import org.jetbrains.compose.resources.stringResource
 import th.skylabmek.kmp_frontend.core.common.UiState
 import th.skylabmek.kmp_frontend.features.feature.markdown.model.MarkdownImage
+import th.skylabmek.kmp_frontend.shared_resources.Res
+import th.skylabmek.kmp_frontend.shared_resources.image_picker_error
+import th.skylabmek.kmp_frontend.shared_resources.image_picker_show_all_desc
+import th.skylabmek.kmp_frontend.shared_resources.image_picker_title
+import th.skylabmek.kmp_frontend.shared_resources.image_picker_upload_desc
 
 @Composable
 internal fun ImagePickerToolbar(
@@ -27,7 +33,7 @@ internal fun ImagePickerToolbar(
     onImageSelect: (MarkdownImage) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp)) {
-        Text("Select image to insert:", style = MaterialTheme.typography.labelSmall)
+        Text(stringResource(Res.string.image_picker_title), style = MaterialTheme.typography.labelSmall)
         Box(modifier = Modifier.fillMaxWidth().height(80.dp), contentAlignment = Alignment.CenterStart) {
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -45,7 +51,7 @@ internal fun ImagePickerToolbar(
                         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                             Icon(
                                 Icons.Default.GridView, 
-                                contentDescription = "Show all images",
+                                contentDescription = stringResource(Res.string.image_picker_show_all_desc),
                                 modifier = Modifier.size(32.dp)
                             )
                         }
@@ -62,7 +68,10 @@ internal fun ImagePickerToolbar(
                             if (isUploading) {
                                 CircularProgressIndicator(modifier = Modifier.size(24.dp), strokeWidth = 2.dp)
                             } else {
-                                Icon(Icons.Default.Add, contentDescription = "Upload Image")
+                                Icon(
+                                    Icons.Default.Add,
+                                    contentDescription = stringResource(Res.string.image_picker_upload_desc)
+                                )
                             }
                         }
                     }
@@ -107,7 +116,11 @@ internal fun ImagePickerToolbar(
                     }
                     is UiState.Error -> {
                         item {
-                             Text("Error", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.labelSmall)
+                             Text(
+                                 stringResource(Res.string.image_picker_error),
+                                 color = MaterialTheme.colorScheme.error,
+                                 style = MaterialTheme.typography.labelSmall
+                             )
                         }
                     }
                 }

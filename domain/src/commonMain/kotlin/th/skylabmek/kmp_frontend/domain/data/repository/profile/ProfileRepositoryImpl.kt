@@ -5,9 +5,9 @@ import th.skylabmek.kmp_frontend.core.network.network_client.NetworkClient
 import th.skylabmek.kmp_frontend.core.network.network_client.executeWrapped
 import th.skylabmek.kmp_frontend.core.network.request.RequestSpec
 import th.skylabmek.kmp_frontend.core.network.result.NetworkResult
+import th.skylabmek.kmp_frontend.domain.model.performances.PerformanceListResult
 import th.skylabmek.kmp_frontend.domain.model.profile.AnnounceResponse
 import th.skylabmek.kmp_frontend.domain.model.profile.LifeStatus
-import th.skylabmek.kmp_frontend.domain.model.profile.Performance
 import th.skylabmek.kmp_frontend.domain.model.profile.PerformanceGroup
 import th.skylabmek.kmp_frontend.domain.model.profile.ProfileResult
 import th.skylabmek.kmp_frontend.domain.repository.profile.ProfileRepository
@@ -43,11 +43,11 @@ class ProfileRepositoryImpl(
         )
     }
 
-    override suspend fun getPerformances(profileId: String): NetworkResult<List<Performance>> {
+    override suspend fun getPublicPerformances(profileId: String): NetworkResult<PerformanceListResult> {
         return networkClient.executeWrapped(
             reqSpec = RequestSpec(
                 method = HttpMethod.Get,
-                path = "/profiles/$profileId/performances"
+                path = "/profiles/$profileId/publicPerformances"
             )
         )
     }

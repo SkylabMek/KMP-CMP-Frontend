@@ -82,6 +82,7 @@ kotlin {
                 implementation(project(":core:common"))
                 implementation(project(":domain"))
                 implementation(project(":features:feature:app"))
+                implementation(project(":features:feature:performance"))
                 implementation(project(":features:app_features:profile"))
                 implementation(project(":shared-resources"))
 

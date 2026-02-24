@@ -82,4 +82,58 @@
     <string name="performance_preview_construction_msg">While I'm building this feature, you can view my performance highlights and full portfolio on my temporary Notion site.</string>
     <string name="performance_preview_visit_notion">View on Notion</string>
     <string name="performance_preview_visit_old_site">Visit Old Website</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_confirm">Confirm</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_save">Save</string>
+    <string name="dialog_dismiss">Dismiss</string>
+    <string name="dialog_close">Close</string>
+    <string name="dialog_done">Done</string>
+    <string name="dialog_performance_delete_title">Delete Performance</string>
+    <string name="dialog_performance_delete_message">Are you sure you want to delete this performance? This action cannot be undone.</string>
+    <string name="dialog_performance_delete_confirm">Delete</string>
+
+    <!-- Performance Info Editor -->
+    <string name="performance_editor_title">Edit Performance Information</string>
+    <string name="performance_editor_delete_desc">Delete Performance</string>
+    <string name="performance_editor_label_title">Title</string>
+    <string name="performance_editor_label_summary">Summary</string>
+    <string name="performance_editor_label_category">Category</string>
+    <string name="performance_editor_label_visibility">Visibility</string>
+    <string name="performance_editor_label_location">Location</string>
+    <string name="performance_editor_label_start_date">Start Date</string>
+    <string name="performance_editor_label_end_date">End Date</string>
+    <string name="performance_editor_date_placeholder">YYYY-MM-DD</string>
+    <string name="performance_editor_label_closed">Closed</string>
+
+    <!-- Performance Detail -->
+    <string name="performance_detail_title">Performance Detail</string>
+    <string name="performance_detail_edit_content">Edit Content</string>
+    <string name="performance_detail_edit_info">Edit Info</string>
+
+    <!-- Markdown Editor -->
+    <string name="markdown_editor_placeholder">Enter markdown here...</string>
+    <string name="markdown_editor_images_in_doc">Images in document:</string>
+    <string name="markdown_editor_url_label">URL: %s</string>
+
+    <!-- Image Picker -->
+    <string name="image_picker_title">Select image to insert:</string>
+    <string name="image_picker_show_all_desc">Show all images</string>
+    <string name="image_picker_upload_desc">Upload Image</string>
+    <string name="image_picker_error">Error</string>
+    <string name="image_picker_loading_error">Error loading images</string>
+    <string name="image_picker_no_images">No images uploaded yet.</string>
+    <string name="image_picker_manage_title">Manage Images</string>
+    <string name="image_picker_toggle_edit_mode">Toggle Edit Mode</string>
+    <string name="image_picker_delete_confirm_title">Delete Image</string>
+    <string name="image_picker_delete_confirm_message">Are you sure you want to delete \'%s\'? This action cannot be undone.</string>
+
+    <!-- Markdown Toolbar -->
+    <string name="markdown_toolbar_bold">Bold</string>
+    <string name="markdown_toolbar_italic">Italic</string>
+    <string name="markdown_toolbar_heading">Heading</string>
+    <string name="markdown_toolbar_link">Link</string>
+    <string name="markdown_toolbar_list">List</string>
+    <string name="markdown_toolbar_image">Image</string>
 </resources>

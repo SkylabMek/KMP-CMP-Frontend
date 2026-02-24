@@ -25,9 +25,10 @@ fun HomeScreen(
 ) {
     val profileUiState by profileViewModel.uiState.collectAsState()
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(profileId, appId) {
         appViewModel.getOrLoadFeatureStatus(appId)
         profileViewModel.getOrLoadProfileBasicData(profileId)
+        profileViewModel.getOrLoadPerformances(profileId)
     }
 
     BoxWithConstraints(modifier = Modifier.fillMaxSize()) {

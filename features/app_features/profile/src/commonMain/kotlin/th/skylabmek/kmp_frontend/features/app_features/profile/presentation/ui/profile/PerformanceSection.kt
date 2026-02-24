@@ -11,8 +11,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import th.skylabmek.kmp_frontend.core.common.UiState
-import th.skylabmek.kmp_frontend.core.common.errorMessage
-import th.skylabmek.kmp_frontend.domain.model.profile.Performance
+import th.skylabmek.kmp_frontend.core.common.asString
+import th.skylabmek.kmp_frontend.domain.model.performances.Performance
 
 @Composable
 fun PerformanceSection(
@@ -45,7 +45,7 @@ fun PerformanceSection(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = state.uiError.errorMessage()(),
+                        text = state.uiError.asString(),
                         color = MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.bodyMedium
                     )

@@ -12,15 +12,6 @@ kotlin {
         namespace = "th.skylabmek.kmp_frontend.features.tools.patfrom_features"
         compileSdk = 36
         minSdk = 24
-
-        withHostTestBuilder {
-        }
-
-        withDeviceTestBuilder {
-            sourceSetTreeName = "test"
-        }.configure {
-            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        }
     }
 
     jvm()
@@ -38,12 +29,12 @@ kotlin {
 
     val xcfName = "features:tools:patfrom_featuresKit"
 
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
-
-    targets.filterIsInstance<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget>().forEach {
-        it.binaries.framework {
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach { iosTarget ->
+        iosTarget.binaries.framework {
             baseName = xcfName
         }
     }
@@ -83,18 +74,14 @@ kotlin {
             }
         }
 
-        // Manually handle iosMain if not automatically provided
-        val iosMain by creating {
-            dependsOn(commonMain.get())
+        // The default hierarchy template automatically creates iosMain 
+        // and connects it to the specific iOS targets.
+        iosMain.get().apply {
             kotlin.srcDir(sharedPickerDir)
             dependencies {
                 implementation(libs.mpfilepicker)
             }
         }
-        
-        getByName("iosX64Main").dependsOn(iosMain)
-        getByName("iosArm64Main").dependsOn(iosMain)
-        getByName("iosSimulatorArm64Main").dependsOn(iosMain)
 
         wasmJsMain.get().apply {
             // Native browser implementation

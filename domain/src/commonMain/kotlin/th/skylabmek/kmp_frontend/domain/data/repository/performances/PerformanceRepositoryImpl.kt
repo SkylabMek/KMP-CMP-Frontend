@@ -8,6 +8,7 @@ import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 import th.skylabmek.kmp_frontend.core.network.network_client.NetworkClient
 import th.skylabmek.kmp_frontend.core.network.network_client.executeWrapped
+import th.skylabmek.kmp_frontend.core.network.network_client.decorator.CleanNetworkClientDecorator
 import th.skylabmek.kmp_frontend.core.network.request.RequestSpec
 import th.skylabmek.kmp_frontend.core.network.result.NetworkResult
 import th.skylabmek.kmp_frontend.domain.model.performances.*
@@ -87,7 +88,11 @@ class PerformanceRepositoryImpl(
     }
 
     override suspend fun getPerformanceContentFromUrl(url: String): NetworkResult<String> {
-        return networkClient.execute(
+        // Create a clean decorator on the fly using the shared provider from the main client.
+        // This bypasses CommonDefaultKtorApiClient's BaseURL and Header logic.
+        val cleanClient = CleanNetworkClientDecorator(networkClient.httpClientProvider)
+        
+        return cleanClient.execute(
             reqSpec = RequestSpec(
                 method = HttpMethod.Get,
                 path = url

@@ -12,6 +12,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
+import th.skylabmek.kmp_frontend.shared_resources.Res
+import th.skylabmek.kmp_frontend.shared_resources.markdown_toolbar_bold
+import th.skylabmek.kmp_frontend.shared_resources.markdown_toolbar_heading
+import th.skylabmek.kmp_frontend.shared_resources.markdown_toolbar_image
+import th.skylabmek.kmp_frontend.shared_resources.markdown_toolbar_italic
+import th.skylabmek.kmp_frontend.shared_resources.markdown_toolbar_link
+import th.skylabmek.kmp_frontend.shared_resources.markdown_toolbar_list
 
 @Composable
 internal fun MarkdownToolbar(
@@ -23,22 +31,22 @@ internal fun MarkdownToolbar(
         horizontalArrangement = Arrangement.Start
     ) {
         IconButton(onClick = { onCommand(MarkdownCommands.bold()) }) {
-            Icon(Icons.Default.FormatBold, contentDescription = "Bold")
+            Icon(Icons.Default.FormatBold, contentDescription = stringResource(Res.string.markdown_toolbar_bold))
         }
         IconButton(onClick = { onCommand(MarkdownCommands.italic()) }) {
-            Icon(Icons.Default.FormatItalic, contentDescription = "Italic")
+            Icon(Icons.Default.FormatItalic, contentDescription = stringResource(Res.string.markdown_toolbar_italic))
         }
         IconButton(onClick = { onCommand(MarkdownCommands.heading()) }) {
-            Icon(Icons.Default.Title, contentDescription = "Heading")
+            Icon(Icons.Default.Title, contentDescription = stringResource(Res.string.markdown_toolbar_heading))
         }
         IconButton(onClick = { onCommand(MarkdownCommands.link()) }) {
-            Icon(Icons.Default.Link, contentDescription = "Link")
+            Icon(Icons.Default.Link, contentDescription = stringResource(Res.string.markdown_toolbar_link))
         }
         IconButton(onClick = { onCommand(MarkdownCommands.list()) }) {
-            Icon(Icons.AutoMirrored.Filled.FormatListBulleted, contentDescription = "List")
+            Icon(Icons.AutoMirrored.Filled.FormatListBulleted, contentDescription = stringResource(Res.string.markdown_toolbar_list))
         }
         IconButton(onClick = onImageClick) {
-            Icon(Icons.Default.Image, contentDescription = "Image")
+            Icon(Icons.Default.Image, contentDescription = stringResource(Res.string.markdown_toolbar_image))
         }
     }
 }

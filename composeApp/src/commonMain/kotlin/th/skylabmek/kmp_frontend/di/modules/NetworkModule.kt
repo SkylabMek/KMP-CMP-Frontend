@@ -15,6 +15,7 @@ val appNetworkModule = module {
             networkConfig = NetworkConfig(
                 baseUrl = AppConfig.apiBaseUrl,
                 timeoutMillis = 30000L,
+                isDebug = AppConfig.IS_DEBUG
             )
         )
     )

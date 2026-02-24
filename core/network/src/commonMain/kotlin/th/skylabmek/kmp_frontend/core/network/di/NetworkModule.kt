@@ -1,6 +1,5 @@
 package th.skylabmek.kmp_frontend.core.network.di
 
-
 import org.koin.core.module.Module
 import org.koin.dsl.module
 import th.skylabmek.kmp_frontend.core.network.config.NetworkConfig
@@ -17,12 +16,17 @@ fun networkModule(
     single { HttpClientProviderFactory(get()) }
     single { NetworkClientFactory(get(), get()) }
 
-    // 2. Default Feature Client (Shared)
+    // 2. Default Feature Client (Decorated with BaseURL and Headers)
     single<NetworkClient>(qualifier = NetworkQualifier.Default.qualifier) {
         get<NetworkClientFactory>().createDefaultFeatureNetworkClient(get())
     }
 
-    // 3. Fatal Error Logging Client (Stateless)
+    // 3. Clean Client (Skinny - No BaseURL or Headers)
+//    single<NetworkClient>(qualifier = NetworkQualifier.Anonymous.qualifier) {
+//        get<NetworkClientFactory>().createCleanNetworkClient()
+//    }
+
+    // 4. Fatal Error Logging Client (Stateless)
     single<NetworkClient>(qualifier = NetworkQualifier.Logged.qualifier) {
         get<NetworkClientFactory>().createErrorFatalLogNetworkClient()
     }

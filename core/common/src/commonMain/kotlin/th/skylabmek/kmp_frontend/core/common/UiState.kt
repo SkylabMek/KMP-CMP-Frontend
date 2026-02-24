@@ -1,7 +1,5 @@
 package th.skylabmek.kmp_frontend.core.common
 
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
@@ -17,11 +15,13 @@ sealed class UiError {
     data class DynamicString(val message: String) : UiError()
 }
 
-fun UiError.errorMessage(): @Composable () -> String {
-    return {
-        when (this) {
-            is UiError.StringRes -> stringResource(res)
-            is UiError.DynamicString -> message
-        }
+/**
+ * Resolves the [UiError] to a [String] within a Composable context.
+ */
+@Composable
+fun UiError.asString(): String {
+    return when (this) {
+        is UiError.StringRes -> stringResource(res)
+        is UiError.DynamicString -> message
     }
 }

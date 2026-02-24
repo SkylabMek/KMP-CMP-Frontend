@@ -2,11 +2,11 @@ package th.skylabmek.kmp_frontend.ui.components.layout
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import th.skylabmek.kmp_frontend.core.common.UiError
-import th.skylabmek.kmp_frontend.core.common.errorMessage
+import th.skylabmek.kmp_frontend.core.common.asString
 import th.skylabmek.kmp_frontend.ui.dimens.Dimens
 
 @Composable
@@ -30,6 +30,9 @@ fun DefaultErrorContent(
     modifier: Modifier = Modifier,
     showRetry: Boolean = true
 ) {
+    // Directly resolve the message using the composable extension
+    val message = error.asString()
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -38,7 +41,7 @@ fun DefaultErrorContent(
         verticalArrangement = Arrangement.spacedBy(Dimens.spaceSmall)
     ) {
         Text(
-            text = error.errorMessage()(),
+            text = message,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.error,
             textAlign = androidx.compose.ui.text.style.TextAlign.Center

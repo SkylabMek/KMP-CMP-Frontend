@@ -1,4 +1,4 @@
-package th.skylabmek.kmp_frontend.features.feature.performance.presentation.components.performance
+package th.skylabmek.kmp_frontend.features.feature.performance.presentation.components.performance.privatePerformance
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons

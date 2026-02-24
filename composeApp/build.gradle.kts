@@ -109,11 +109,11 @@ kotlin {
                 implementation(libs.compose.ui.tooling)
             }
         }
-        
+
         // Let the default hierarchy template create jsMain and wasmJsMain.
-        // If you need a shared webMain, the best practice in modern KMP is to 
-        // name it such that the template recognizes it or use the 'applyDefaultHierarchyTemplate' 
-        // to customize it, but manually adding dependsOn to getting/creating source sets 
+        // If you need a shared webMain, the best practice in modern KMP is to
+        // name it such that the template recognizes it or use the 'applyDefaultHierarchyTemplate'
+        // to customize it, but manually adding dependsOn to getting/creating source sets
         // often conflicts with the template's automatic discovery.
     }
 }

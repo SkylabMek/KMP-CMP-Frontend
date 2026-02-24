@@ -15,8 +15,13 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
+import org.jetbrains.compose.resources.stringResource
 import th.skylabmek.kmp_frontend.core.common.UiState
 import th.skylabmek.kmp_frontend.features.feature.markdown.model.MarkdownImage
+import th.skylabmek.kmp_frontend.shared_resources.Res
+import th.skylabmek.kmp_frontend.shared_resources.markdown_editor_images_in_doc
+import th.skylabmek.kmp_frontend.shared_resources.markdown_editor_placeholder
+import th.skylabmek.kmp_frontend.shared_resources.markdown_editor_url_label
 import th.skylabmek.kmp_frontend.ui.components.layout.DefaultLoadingContent
 
 @Composable
@@ -113,7 +118,7 @@ fun MarkdownEditor(
                 value = value,
                 onValueChange = onValueChange,
                 modifier = Modifier.fillMaxWidth().weight(1f).padding(8.dp),
-                placeholder = { Text("Enter markdown here...") },
+                placeholder = { Text(stringResource(Res.string.markdown_editor_placeholder)) },
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
                     unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant
@@ -132,7 +137,7 @@ fun MarkdownEditor(
                     }
                     if (imagesInDoc.isNotEmpty()) {
                         Text(
-                            "Images in document:",
+                            stringResource(Res.string.markdown_editor_images_in_doc),
                             style = MaterialTheme.typography.labelMedium,
                             modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
                         )
@@ -176,7 +181,7 @@ fun MarkdownEditor(
                                                 style = MaterialTheme.typography.bodySmall
                                             )
                                             Text(
-                                                "URL: ${image.imageUrl}",
+                                                stringResource(Res.string.markdown_editor_url_label, image.imageUrl),
                                                 style = MaterialTheme.typography.labelSmall,
                                                 maxLines = 1,
                                                 overflow = TextOverflow.Ellipsis

@@ -7,13 +7,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import org.jetbrains.compose.resources.stringResource
+import th.skylabmek.kmp_frontend.shared_resources.Res
+import th.skylabmek.kmp_frontend.shared_resources.dialog_cancel
+import th.skylabmek.kmp_frontend.shared_resources.dialog_confirm
 
 @Composable
 fun ConfirmDialog(
     title: String,
     message: String,
-    confirmText: String = "Confirm",
-    dismissText: String = "Cancel",
+    confirmText: String = stringResource(Res.string.dialog_confirm),
+    dismissText: String = stringResource(Res.string.dialog_cancel),
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
     isDangerous: Boolean = false

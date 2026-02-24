@@ -51,6 +51,7 @@ kotlin {
                 implementation(project(":features:tools:patfrom_features"))
                 implementation(project(":shared-resources"))
 
+
                 implementation(libs.kotlin.stdlib)
                 implementation(libs.bundles.composeMaterial3)
                 implementation(libs.compose.components.resources)

@@ -1,9 +1,7 @@
-package th.skylabmek.kmp_frontend.features.feature.performance.presentation.components.performance
+package th.skylabmek.kmp_frontend.features.feature.performance.presentation.components.performance.publicPerformance
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,34 +25,7 @@ import androidx.compose.ui.unit.dp
 import th.skylabmek.kmp_frontend.domain.model.performances.Performance
 
 @Composable
-fun PerformanceGrid(
-    performances: List<Performance>,
-    onPerformanceClick: (Performance) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        performances.chunked(2).forEach { rowItems ->
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                rowItems.forEach { performance ->
-                    PerformanceItem(
-                        performance = performance,
-                        onClick = { onPerformanceClick(performance) },
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-                if (rowItems.size == 1) {
-                    Spacer(modifier = Modifier.weight(1f))
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun PerformanceItem(
+fun PerformanceShowItem(
     performance: Performance,
     onClick: () -> Unit,
     modifier: Modifier = Modifier

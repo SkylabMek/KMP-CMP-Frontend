@@ -18,7 +18,7 @@ import th.skylabmek.kmp_frontend.core.network.result.NetworkResult
  * It prioritizes delivery and avoids complex transformations that might fail during a crash.
  */
 class ErrorLoggingKtorApiClient(
-    private val httpClientProvider: HttpClientProvider,
+    override val httpClientProvider: HttpClientProvider,
     private val networkConfig: NetworkConfig
 ) : NetworkClient {
 

@@ -17,9 +17,9 @@ actual fun <T : NavKey> NavBackStack<T>.SyncWithBrowser(providers: List<FeatureN
 
     CollectStackChanges(providers) { path, isPush, isReplace ->
         if (isPush) {
-            window.history.pushState(null, "", path)
+            window.history.pushState(null, "", "#$path")  // ← hash routing
         } else if (isReplace) {
-            window.history.replaceState(null, "", path)
+            window.history.replaceState(null, "", "#$path")
         }
     }
 }

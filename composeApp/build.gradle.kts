@@ -118,12 +118,6 @@ kotlin {
     }
 }
 
-compose.resources {
-    generateResClass = always
-    publicResClass = true
-    packageOfResClass = "th.skylabmek.kmp_frontend"
-}
-
 compose.desktop {
     application {
         mainClass = "th.skylabmek.kmp_frontend.MainKt"

@@ -13,9 +13,11 @@ fun main() {
     val body = document.body ?: return
     
     // Capture the initial path from the browser to handle initial routing
-    val initialPath = window.location.pathname + window.location.search
+//    val initialPath = window.location.pathname + window.location.search
     
     ComposeViewport(body) {
-        App(deepLinkUri = initialPath)
+        App(
+//            deepLinkUri = initialPath
+        )
     }
 }

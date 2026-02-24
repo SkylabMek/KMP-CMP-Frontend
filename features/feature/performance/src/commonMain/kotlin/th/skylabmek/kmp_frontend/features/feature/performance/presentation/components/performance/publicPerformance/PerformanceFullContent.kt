@@ -112,7 +112,6 @@ fun PerformanceFullContent(
                     onDismissRequest = { showInfoDialog = false }
                 )
             }
-            Text(stringResource(Res.string.url_old_website))
         }
     }
 }

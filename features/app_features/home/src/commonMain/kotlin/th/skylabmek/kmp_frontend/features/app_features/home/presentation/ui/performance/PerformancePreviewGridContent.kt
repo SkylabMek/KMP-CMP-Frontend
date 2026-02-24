@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import th.skylabmek.kmp_frontend.core.common.UiState
@@ -69,11 +70,20 @@ fun PerformancePreviewGridContent(
             onDismissRequest = { selectedPerformance = null },
             properties = DialogProperties(usePlatformDefaultWidth = false)
         ) {
-            Surface(modifier = Modifier.fillMaxSize()) {
-                PerformanceFullContent(
-                    performance = performance,
-                    onClose = { selectedPerformance = null }
-                )
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth(0.95f)
+                    .fillMaxHeight(0.85f),
+                shape = MaterialTheme.shapes.extraLarge,
+                color = MaterialTheme.colorScheme.surface,
+                tonalElevation = 6.dp
+            ) {
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    PerformanceFullContent(
+                        performance = performance,
+                        onClose = { selectedPerformance = null }
+                    )
+                }
             }
         }
     }

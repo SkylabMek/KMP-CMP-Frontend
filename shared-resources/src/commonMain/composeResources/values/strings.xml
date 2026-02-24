@@ -136,4 +136,23 @@
     <string name="markdown_toolbar_link">Link</string>
     <string name="markdown_toolbar_list">List</string>
     <string name="markdown_toolbar_image">Image</string>
+
+    <!-- Performance Categories -->
+    <string name="perf_cat_achievement_name">Achievement</string>
+    <string name="perf_cat_achievement_desc">Awards, certifications, recognitions</string>
+    <string name="perf_cat_demo_name">Demo/Prototype</string>
+    <string name="perf_cat_demo_desc">Interactive demonstrations and prototypes of features or concepts</string>
+    <string name="perf_cat_performance_name">Performance</string>
+    <string name="perf_cat_performance_desc">Talks, shows, live performances</string>
+    <string name="perf_cat_project_name">Project</string>
+    <string name="perf_cat_project_desc">Personal or professional projects</string>
+    <string name="perf_cat_publication_name">Publication</string>
+    <string name="perf_cat_publication_desc">Articles, blogs, papers</string>
+    <string name="perf_cat_work_name">Work Experience</string>
+    <string name="perf_cat_work_desc">Employment or freelance work</string>
+
+    <!-- Visibility -->
+    <string name="visibility_draft_name">Draft</string>
+    <string name="visibility_private_name">Private</string>
+    <string name="visibility_public_name">Public</string>
 </resources>

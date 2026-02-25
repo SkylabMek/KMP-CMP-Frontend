@@ -1,4 +1,4 @@
-package th.skylabmek.kmp_frontend.features.app_features.home.presentation.ui.performance
+package th.skylabmek.kmp_frontend.features.app_features.home.presentation.ui.components.performance
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -15,6 +15,8 @@ import th.skylabmek.kmp_frontend.domain.model.feature.FeatureStatusCode
 import th.skylabmek.kmp_frontend.features.feature.app.presentation.viewmodel.AppViewModel
 import th.skylabmek.kmp_frontend.features.feature.performance.model.PerformanceCategoryUi
 import th.skylabmek.kmp_frontend.features.app_features.profile.presentation.viewmodel.ProfileViewModel
+import th.skylabmek.kmp_frontend.features.app_features.home.navigation.HomeNavKey
+import th.skylabmek.kmp_frontend.navigation.tools.NavigatorAccessor
 import th.skylabmek.kmp_frontend.shared_resources.Res
 import th.skylabmek.kmp_frontend.shared_resources.*
 import th.skylabmek.kmp_frontend.ui.components.card.appCard.AppElevatedCard
@@ -31,6 +33,8 @@ fun PerformancePreviewSection(
     profileId: String,
     modifier: Modifier = Modifier
 ) {
+    val navigator = NavigatorAccessor.current
+    
     // Ensure data is fetched when this section is composed
     LaunchedEffect(profileId) {
         profileViewModel.loadProfileBasicData(profileId)
@@ -77,8 +81,8 @@ fun PerformancePreviewSection(
                                                 style = MaterialTheme.typography.titleMedium,
                                                 fontWeight = FontWeight.Bold
                                             )
-                                            TextButton(onClick = { /* Navigate to full performance screen */ }) {
-                                                Text("See All")
+                                            TextButton(onClick = { navigator.navigate(HomeNavKey.PerformanceList) }) {
+                                                Text(stringResource(Res.string.performance_preview_see_all))
                                             }
                                         }
                                     }

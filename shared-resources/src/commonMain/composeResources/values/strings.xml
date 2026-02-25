@@ -82,6 +82,7 @@
     <string name="performance_preview_construction_msg">While I'm building this feature, you can view my performance highlights and full portfolio on my temporary Notion site.</string>
     <string name="performance_preview_visit_notion">View on Notion</string>
     <string name="performance_preview_visit_old_site">Visit Old Website</string>
+    <string name="performance_preview_see_all">See All</string>
 
     <!-- Dialogs -->
     <string name="dialog_confirm">Confirm</string>

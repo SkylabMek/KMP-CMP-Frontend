@@ -1,4 +1,4 @@
-package th.skylabmek.kmp_frontend.features.app_features.home.presentation.ui.performance
+package th.skylabmek.kmp_frontend.features.app_features.home.presentation.ui.components.performance
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*

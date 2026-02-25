@@ -7,4 +7,7 @@ import th.skylabmek.kmp_frontend.navigation.tools.NavKey
 sealed interface HomeNavKey : NavKey {
     @Serializable
     data object Home : HomeNavKey
+
+    @Serializable
+    data object PerformanceList : HomeNavKey
 }

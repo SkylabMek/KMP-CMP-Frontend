@@ -9,8 +9,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import org.koin.compose.viewmodel.koinViewModel
 import th.skylabmek.kmp_frontend.features.feature.app.presentation.viewmodel.AppViewModel
-import th.skylabmek.kmp_frontend.features.app_features.home.presentation.ui.performance.PerformancePreviewDemo
-import th.skylabmek.kmp_frontend.features.app_features.home.presentation.ui.performance.PerformancePreviewSection
+import th.skylabmek.kmp_frontend.features.app_features.home.presentation.ui.components.performance.PerformancePreviewDemo
+import th.skylabmek.kmp_frontend.features.app_features.home.presentation.ui.components.performance.PerformancePreviewSection
 import th.skylabmek.kmp_frontend.features.app_features.profile.presentation.viewmodel.ProfileViewModel
 import th.skylabmek.kmp_frontend.ui.config.UI
 import th.skylabmek.kmp_frontend.ui.dimens.Dimens

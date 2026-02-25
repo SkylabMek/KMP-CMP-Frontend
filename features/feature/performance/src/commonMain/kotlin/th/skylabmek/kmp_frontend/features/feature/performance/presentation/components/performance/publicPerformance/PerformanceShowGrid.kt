@@ -1,50 +1,54 @@
 package th.skylabmek.kmp_frontend.features.feature.performance.presentation.components.performance.publicPerformance
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import th.skylabmek.kmp_frontend.domain.model.performances.Performance
-import th.skylabmek.kmp_frontend.ui.config.UI
 import th.skylabmek.kmp_frontend.ui.dimens.Dimens
 
 @Composable
 fun PerformanceShowGrid(
     performances: List<Performance>,
     onPerformanceClick: (Performance) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    preferredColumnCount: Int? = null
 ) {
-    val columnCount = when {
-        UI.isDesktop -> 3
-        UI.isTablet -> 2
-        else -> 1
-    }
-
     val spacing = Dimens.itemSpacingMedium
 
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(spacing)
-    ) {
-        performances.chunked(columnCount).forEach { rowItems ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(spacing)
-            ) {
-                rowItems.forEach { performance ->
-                    PerformanceShowItem(
-                        performance = performance,
-                        onClick = { onPerformanceClick(performance) },
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-                // Fill empty slots if any
-                if (rowItems.size < columnCount) {
-                    repeat(columnCount - rowItems.size) {
-                        Spacer(modifier = Modifier.weight(1f))
+    BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
+        val containerWidth = maxWidth
+        
+        // Calculate columns based on the actual width available to this component.
+        // This ensures it looks good whether it's full screen or in a half-screen column.
+        val columnCount = preferredColumnCount ?: when {
+            containerWidth < 400.dp -> 2
+            containerWidth < 750.dp -> 3
+            containerWidth < 1100.dp -> 4
+            else -> 5
+        }
+
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(spacing)
+        ) {
+            performances.chunked(columnCount).forEach { rowItems ->
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(spacing)
+                ) {
+                    rowItems.forEach { performance ->
+                        PerformanceShowItem(
+                            performance = performance,
+                            onClick = { onPerformanceClick(performance) },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                    // Fill empty slots if any to maintain card size and alignment
+                    if (rowItems.size < columnCount) {
+                        repeat(columnCount - rowItems.size) {
+                            Spacer(modifier = Modifier.weight(1f))
+                        }
                     }
                 }
             }

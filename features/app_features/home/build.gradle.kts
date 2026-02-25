@@ -92,6 +92,8 @@ kotlin {
 
                 implementation(libs.kotlin.stdlib)
 
+                // Compose
+                implementation(libs.compose.materialIconsExtended)
                 implementation(libs.bundles.composeMaterial3)
                 implementation(libs.compose.components.resources)
 

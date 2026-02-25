@@ -17,6 +17,7 @@ data class AppDimens(
     val spaceLarge: Dp = 24.dp,
     val spaceExtraLarge: Dp = 32.dp,
 
+    val paddingExtraSmall: Dp = 4.dp,
     val paddingSmall: Dp = 8.dp,
     val paddingMedium: Dp = 16.dp,
     val paddingLarge: Dp = 24.dp,
@@ -58,6 +59,7 @@ object Dimens {
     val spaceLarge: Dp @Composable @ReadOnlyComposable get() = LocalDimens.current.spaceLarge
     val spaceExtraLarge: Dp @Composable @ReadOnlyComposable get() = LocalDimens.current.spaceExtraLarge
 
+    val paddingExtraSmall: Dp @Composable @ReadOnlyComposable get() = LocalDimens.current.paddingExtraSmall
     val paddingSmall: Dp @Composable @ReadOnlyComposable get() = LocalDimens.current.paddingSmall
     val paddingMedium: Dp @Composable @ReadOnlyComposable get() = LocalDimens.current.paddingMedium
     val paddingLarge: Dp @Composable @ReadOnlyComposable get() = LocalDimens.current.paddingLarge

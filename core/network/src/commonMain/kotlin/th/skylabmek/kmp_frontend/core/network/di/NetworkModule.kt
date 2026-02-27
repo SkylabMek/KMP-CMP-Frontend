@@ -18,7 +18,11 @@ fun networkModule(
 
     // 2. Default Feature Client (Decorated with BaseURL and Headers)
     single<NetworkClient>(qualifier = NetworkQualifier.Default.qualifier) {
-        get<NetworkClientFactory>().createDefaultFeatureNetworkClient(get())
+        get<NetworkClientFactory>()
+            .createDefaultFeatureNetworkClient(
+                get(),
+                get()
+            )
     }
 
     // 3. Clean Client (Skinny - No BaseURL or Headers)

@@ -29,8 +29,14 @@ class BuildKonfigConventionPlugin : Plugin<Project> {
                     }
 
             val buildTypeProperty = providers.gradleProperty("buildType").getOrElse("debug").lowercase()
+            
+            // isDebug is true only if explicitly requested or if it's a dev task (not Release/Distribution/Bundle)
             val isDebug = buildTypeProperty == "debug" &&
-                    taskNames.none { it.contains("Release", ignoreCase = true) }
+                    taskNames.none { 
+                        it.contains("Release", ignoreCase = true) ||
+                        it.contains("Distribution", ignoreCase = true) ||
+                        it.contains("bundle", ignoreCase = true)
+                    }
 
             extensions.configure<BuildKonfigExtension> {
                 packageName = "th.skylabmek.kmp_frontend.core.common"
@@ -42,23 +48,22 @@ class BuildKonfigConventionPlugin : Plugin<Project> {
                 val devAndroidBaseUrl = "http://10.0.2.2:3000"
 
                 // Default Configuration (Visible in commonMain)
-                // This is dynamically configured based on the build environment to work seamlessly with KMP tasks
                 defaultConfigs {
                     buildConfigField(Type.BOOLEAN, "IS_PRODUCTION", isProduction.toString())
                     buildConfigField(Type.BOOLEAN, "IS_DEBUG", isDebug.toString())
-                    buildConfigField(Type.STRING, "PROFILE_ID", if (isProduction) "profile_001" else "profile_001")
-                    buildConfigField(Type.STRING, "APP_ID", if (isProduction) "website_main_001" else "website_main_001")
+                    buildConfigField(Type.STRING, "PROFILE_ID", "profile_001")
+                    buildConfigField(Type.STRING, "APP_ID", "website_main_001")
                     buildConfigField(Type.STRING, "BASE_URL", if (isProduction) prodBaseUrl else devBaseUrl)
                 }
 
-                // Target-specific overrides for the default configuration
+                // Target-specific overrides
                 targetConfigs {
                     create("android") {
                         buildConfigField(Type.STRING, "BASE_URL", if (isProduction) prodBaseUrl else devAndroidBaseUrl)
                     }
                 }
 
-                // Explicit variants as flavors (Optional, for platform-specific builds that support flavors)
+                // Variants/Flavors
                 defaultConfigs("dev") {
                     buildConfigField(Type.BOOLEAN, "IS_PRODUCTION", "false")
                     buildConfigField(Type.BOOLEAN, "IS_DEBUG", "true")

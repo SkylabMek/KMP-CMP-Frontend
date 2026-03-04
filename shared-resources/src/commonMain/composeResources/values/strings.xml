@@ -96,7 +96,8 @@
     <string name="dialog_performance_delete_confirm">Delete</string>
 
     <!-- Performance Info Editor -->
-    <string name="performance_editor_title">Edit Performance Information</string>
+    <string name="performance_create_title">Create Performance Information</string>
+    <string name="performance_edit_title">Edit Performance Information</string>
     <string name="performance_editor_delete_desc">Delete Performance</string>
     <string name="performance_editor_label_title">Title</string>
     <string name="performance_editor_label_summary">Summary</string>

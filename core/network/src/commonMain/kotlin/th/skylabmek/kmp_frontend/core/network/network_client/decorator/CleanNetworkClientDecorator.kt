@@ -64,6 +64,9 @@ class CleanNetworkClientDecorator(
                 NetworkResult.Success(result)
             } else {
                 val errorBody = response.bodyAsText()
+                if (isDebug) {
+                    println("Error Body: $errorBody")
+                }
                 NetworkResult.Failure(
                     NetworkError.Http(
                         code = response.status.value,
@@ -73,6 +76,10 @@ class CleanNetworkClientDecorator(
             }
 
         } catch (e: Throwable) {
+            if (isDebug) {
+                println("--- Clean Network Exception ---")
+                println("Error: ${e.message}")
+            }
             NetworkResult.Failure(e.toNetworkError())
         }
     }

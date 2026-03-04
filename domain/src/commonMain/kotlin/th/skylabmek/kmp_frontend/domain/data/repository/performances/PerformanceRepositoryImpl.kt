@@ -90,12 +90,20 @@ class PerformanceRepositoryImpl(
     override suspend fun getPerformanceContentFromUrl(url: String): NetworkResult<String> {
         // Create a clean decorator on the fly using the shared provider from the main client.
         // This bypasses CommonDefaultKtorApiClient's BaseURL and Header logic.
-        val cleanClient = CleanNetworkClientDecorator(networkClient.httpClientProvider)
+        val cleanClient = CleanNetworkClientDecorator(
+            networkClient.httpClientProvider,
+            isDebug = false
+        )
         
         return cleanClient.execute(
             reqSpec = RequestSpec(
                 method = HttpMethod.Get,
-                path = url
+                path = url,
+                headers = mapOf(
+                    HttpHeaders.CacheControl to "no-cache, no-store, must-revalidate",
+                    HttpHeaders.Pragma to "no-cache",
+                    HttpHeaders.Expires to "0"
+                )
             ),
             mapper = { it.bodyAsText() }
         )

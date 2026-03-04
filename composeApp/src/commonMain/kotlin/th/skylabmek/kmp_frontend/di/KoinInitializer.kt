@@ -2,6 +2,7 @@ package th.skylabmek.kmp_frontend.di
 
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
+import th.skylabmek.kmp_frontend.core.common.AppConfig
 import th.skylabmek.kmp_frontend.core.data_local.di.DataLocalModule
 import th.skylabmek.kmp_frontend.di.modules.appNetworkModule
 import th.skylabmek.kmp_frontend.di.modules.repositoryModule
@@ -14,6 +15,7 @@ import th.skylabmek.kmp_frontend.di.modules.viewModelModule
  * @param appDeclaration Optional platform-specific Koin configuration
  */
 fun initKoin(appDeclaration: KoinAppDeclaration? = null) {
+    println("AppConfig.IS_DEBUG = ${AppConfig.IS_DEBUG}")
     startKoin {
         appDeclaration?.invoke(this)
         modules(

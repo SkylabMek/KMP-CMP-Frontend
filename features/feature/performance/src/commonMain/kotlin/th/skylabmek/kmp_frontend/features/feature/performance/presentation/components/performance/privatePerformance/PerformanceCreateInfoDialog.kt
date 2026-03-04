@@ -6,78 +6,44 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
-import th.skylabmek.kmp_frontend.domain.model.performances.Performance
-import th.skylabmek.kmp_frontend.domain.model.performances.UpdatePerformanceRequest
+import th.skylabmek.kmp_frontend.domain.model.performances.CreatePerformanceRequest
 import th.skylabmek.kmp_frontend.features.feature.performance.model.PerformanceCategoryUi
 import th.skylabmek.kmp_frontend.features.feature.performance.model.VisibilityUi
 import th.skylabmek.kmp_frontend.shared_resources.Res
 import th.skylabmek.kmp_frontend.shared_resources.*
-import th.skylabmek.kmp_frontend.ui.components.dialog.ConfirmDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PerformanceInfoEditorDialog(
-    performance: Performance,
+fun PerformanceCreateInfoDialog(
     onDismissRequest: () -> Unit,
-    onSave: (UpdatePerformanceRequest) -> Unit,
-    onDelete: () -> Unit
+    onSave: (CreatePerformanceRequest) -> Unit
 ) {
-    var title by remember { mutableStateOf(performance.title) }
-    var summary by remember { mutableStateOf(performance.summary ?: "") }
-    var location by remember { mutableStateOf(performance.location ?: "") }
-    var startDate by remember { mutableStateOf(performance.startDate ?: "") }
-    var endDate by remember { mutableStateOf(performance.endDate ?: "") }
-    var isClosed by remember { mutableStateOf(performance.close) }
+    var title by remember { mutableStateOf("") }
+    var summary by remember { mutableStateOf("") }
+    var location by remember { mutableStateOf("") }
+    var startDate by remember { mutableStateOf("") }
+    var endDate by remember { mutableStateOf("") }
     
     var selectedCategory by remember { 
-        mutableStateOf(PerformanceCategoryUi.fromId(performance.categoryId) ?: PerformanceCategoryUi.PROJECT)
+        mutableStateOf(PerformanceCategoryUi.PROJECT)
     }
     var selectedVisibility by remember { 
-        mutableStateOf(VisibilityUi.fromId(performance.visibilityId) ?: VisibilityUi.DRAFT)
+        mutableStateOf(VisibilityUi.DRAFT)
     }
 
     var categoryExpanded by remember { mutableStateOf(false) }
     var visibilityExpanded by remember { mutableStateOf(false) }
-    var showDeleteConfirm by remember { mutableStateOf(false) }
-
-    if (showDeleteConfirm) {
-        ConfirmDialog(
-            title = stringResource(Res.string.dialog_performance_delete_title),
-            message = stringResource(Res.string.dialog_performance_delete_message),
-            confirmText = stringResource(Res.string.dialog_performance_delete_confirm),
-            isDangerous = true,
-            onConfirm = {
-                onDelete()
-                onDismissRequest()
-            },
-            onDismiss = { showDeleteConfirm = false }
-        )
-    }
 
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(stringResource(Res.string.performance_edit_title))
-                IconButton(onClick = { showDeleteConfirm = true }) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = stringResource(Res.string.performance_editor_delete_desc),
-                        tint = MaterialTheme.colorScheme.error
-                    )
-                }
-            }
+            Text(stringResource(Res.string.performance_create_title))
         },
         text = {
             Column(
@@ -180,26 +146,21 @@ fun PerformanceInfoEditorDialog(
                         placeholder = { Text(stringResource(Res.string.performance_editor_date_placeholder)) }
                     )
                 }
-
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Checkbox(checked = isClosed, onCheckedChange = { isClosed = it })
-                    Text(stringResource(Res.string.performance_editor_label_closed))
-                }
             }
         },
         confirmButton = {
             Button(
+                enabled = title.isNotBlank(),
                 onClick = {
                     onSave(
-                        UpdatePerformanceRequest(
+                        CreatePerformanceRequest(
                             categoryId = selectedCategory.id,
                             visibilityId = selectedVisibility.id,
                             title = title,
                             summary = summary.ifBlank { null },
                             location = location.ifBlank { null },
                             startDate = startDate.ifBlank { null },
-                            endDate = endDate.ifBlank { null },
-                            close = isClosed
+                            endDate = endDate.ifBlank { null }
                         )
                     )
                 }

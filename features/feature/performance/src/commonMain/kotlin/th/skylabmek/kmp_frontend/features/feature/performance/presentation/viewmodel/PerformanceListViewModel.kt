@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import th.skylabmek.kmp_frontend.core.common.UiError
 import th.skylabmek.kmp_frontend.core.common.UiState
 import th.skylabmek.kmp_frontend.core.network.result.NetworkResult
+import th.skylabmek.kmp_frontend.domain.model.performances.CreatePerformanceRequest
 import th.skylabmek.kmp_frontend.domain.model.performances.Performance
 import th.skylabmek.kmp_frontend.domain.repository.performances.PerformanceRepository
 
@@ -18,6 +19,9 @@ class PerformanceListViewModel(
 
     private val _performancesState = MutableStateFlow<UiState<List<Performance>>>(UiState.Loading)
     val performancesState: StateFlow<UiState<List<Performance>>> = _performancesState.asStateFlow()
+
+    private val _createPerformanceState = MutableStateFlow<UiState<Unit>?>(null)
+    val createPerformanceState: StateFlow<UiState<Unit>?> = _createPerformanceState.asStateFlow()
 
     fun loadPerformances(profileId: String) {
         viewModelScope.launch {
@@ -33,5 +37,26 @@ class PerformanceListViewModel(
                 }
             }
         }
+    }
+
+    fun createPerformance(profileId: String, request: CreatePerformanceRequest) {
+        viewModelScope.launch {
+            _createPerformanceState.value = UiState.Loading
+            when (val result = performanceRepository.createPerformance(profileId, request)) {
+                is NetworkResult.Success -> {
+                    _createPerformanceState.value = UiState.Success(Unit)
+                    loadPerformances(profileId)
+                }
+                is NetworkResult.Failure -> {
+                    _createPerformanceState.value = UiState.Error(
+                        UiError.StringRes(result.error.asStringResource())
+                    )
+                }
+            }
+        }
+    }
+
+    fun resetCreatePerformanceState() {
+        _createPerformanceState.value = null
     }
 }

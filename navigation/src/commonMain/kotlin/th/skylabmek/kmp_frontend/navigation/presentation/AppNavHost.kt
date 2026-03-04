@@ -1,6 +1,6 @@
 package th.skylabmek.kmp_frontend.navigation.presentation
 
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -32,10 +32,12 @@ fun AppNavHost(
         }
     }
 
+    // Removed fillMaxSize() to avoid "infinity maximum height constraints" 
+    // when nested inside a scrollable Column in AppLayout.
     NavDisplay(
         backStack = backStack,
         onBack = onBack ?: {},
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier.fillMaxWidth(),
         entryProvider = entryProvider
     )
 }

@@ -87,7 +87,7 @@ fun PerformanceShowItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = performance.startDate ?: "",
+                    text = performance.endDate ?: "",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.SemiBold

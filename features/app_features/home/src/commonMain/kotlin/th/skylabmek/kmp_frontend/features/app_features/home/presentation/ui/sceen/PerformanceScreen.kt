@@ -49,7 +49,7 @@ fun PerformanceScreen(
             }
 
             is UiState.Success -> {
-                val performances = state.data
+                val performances = state.data.sortedByDescending { it.updatedAt ?: it.createdAt }
                 if (performances.isEmpty()) {
                     Text(
                         text = "No performances available.",

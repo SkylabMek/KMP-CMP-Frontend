@@ -45,6 +45,7 @@ fun PerformancePreviewGridContent(
             is UiState.Success -> {
                 val performances = profileUiState.data.performances
                     .filter(filter)
+                    .sortedByDescending { it.endDate }
                     .take(maxItems)
 
                 if (performances.isEmpty()) {

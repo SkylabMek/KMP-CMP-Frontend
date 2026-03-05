@@ -93,7 +93,7 @@ private fun PerformanceContent(
             }
 
             is UiState.Success -> {
-                val performances = performanceUiState.data
+                val performances = performanceUiState.data.sortedByDescending { it.updatedAt ?: it.createdAt }
                 PerformanceShowGrid(
                     performances = performances,
                     onPerformanceClick = onPerformanceClick

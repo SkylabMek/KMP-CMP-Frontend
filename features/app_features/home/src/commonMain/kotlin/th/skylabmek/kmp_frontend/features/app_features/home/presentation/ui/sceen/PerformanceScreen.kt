@@ -10,9 +10,9 @@ import androidx.compose.ui.window.DialogProperties
 import org.koin.compose.viewmodel.koinViewModel
 import th.skylabmek.kmp_frontend.core.common.UiState
 import th.skylabmek.kmp_frontend.domain.model.performances.Performance
+import th.skylabmek.kmp_frontend.features.app_features.profile.presentation.viewmodel.ProfileViewModel
 import th.skylabmek.kmp_frontend.features.feature.performance.presentation.components.performance.publicPerformance.PerformanceFullContent
 import th.skylabmek.kmp_frontend.features.feature.performance.presentation.components.performance.privatePerformance.PerformanceShowGrid
-import th.skylabmek.kmp_frontend.features.feature.performance.presentation.viewmodel.PerformanceListViewModel
 import th.skylabmek.kmp_frontend.ui.components.layout.DefaultErrorContent
 import th.skylabmek.kmp_frontend.ui.components.layout.DefaultLoadingContent
 import th.skylabmek.kmp_frontend.ui.dimens.Dimens
@@ -22,14 +22,10 @@ import th.skylabmek.kmp_frontend.ui.dimens.Dimens
 fun PerformanceScreen(
     profileId: String,
     onBack: () -> Unit,
-    viewModel: PerformanceListViewModel = koinViewModel(),
+    viewModel: ProfileViewModel = koinViewModel(),
 ) {
-    val performancesState by viewModel.performancesState.collectAsState()
+    val performancesState by viewModel.getOrLoadPerformances(profileId).collectAsState()
     var selectedPerformance by remember { mutableStateOf<Performance?>(null) }
-
-    LaunchedEffect(profileId) {
-        viewModel.loadPerformances(profileId)
-    }
 
     Box(
         modifier = Modifier
@@ -49,13 +45,15 @@ fun PerformanceScreen(
             }
 
             is UiState.Success -> {
-                val performances = state.data.sortedByDescending { it.updatedAt ?: it.createdAt }
+                val performances = state.data.performances.sortedByDescending { it.updatedAt ?: it.createdAt }
                 if (performances.isEmpty()) {
-                    Text(
-                        text = "No performances available.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
+                        Text(
+                            text = "No performances available.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 } else {
                     PerformanceShowGrid(
                         performances = performances,

@@ -8,19 +8,23 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import th.skylabmek.kmp_frontend.core.common.UiError
 import th.skylabmek.kmp_frontend.core.common.UiState
 import th.skylabmek.kmp_frontend.core.common.util.isRefreshTokenExpired
 import th.skylabmek.kmp_frontend.core.common.util.shouldRefreshToken
 import th.skylabmek.kmp_frontend.core.data_local.domain.LocalSettingsRepository
+import th.skylabmek.kmp_frontend.core.network.result.NetworkResult
 import th.skylabmek.kmp_frontend.domain.model.auth.RefreshRequest
 import th.skylabmek.kmp_frontend.domain.model.profile.LifeStatus
 import th.skylabmek.kmp_frontend.domain.repository.auth.AuthRepository
+import th.skylabmek.kmp_frontend.domain.repository.profile.ProfileRepository
 import th.skylabmek.kmp_frontend.features.app_features.profile.presentation.viewmodel.ProfileViewModel
 import th.skylabmek.kmp_frontend.ui.config.ThemeSetting
 import kotlin.time.Clock
 
 class MainContentViewModel(
     private val profileViewModel: ProfileViewModel,
+    private val profileRepository: ProfileRepository,
     private val localSettings: LocalSettingsRepository,
     private val authRepository: AuthRepository
 ) : ViewModel() {
@@ -35,18 +39,7 @@ class MainContentViewModel(
         // 1. Initial Check: If the refresh token itself is expired, clear everything immediately
         checkInitialAuthStatus()
 
-        // 2. Observe ProfileViewModel's state and extract LifeStatus
-        viewModelScope.launch {
-            profileViewModel.uiState.collect { profileUiState ->
-                _lifeStatusState.value = when (profileUiState) {
-                    is UiState.Loading -> UiState.Loading
-                    is UiState.Error -> UiState.Error(profileUiState.uiError)
-                    is UiState.Success -> UiState.Success(profileUiState.data.lifeStatus)
-                }
-            }
-        }
-
-        // 3. Observe theme setting changes from local storage
+        // 2. Observe theme setting changes from local storage
         viewModelScope.launch {
             localSettings.getStringFlow(THEME_SETTING_KEY, ThemeSetting.SYSTEM.name)
                 .collectLatest { settingName ->
@@ -58,7 +51,7 @@ class MainContentViewModel(
                 }
         }
 
-        // 4. Reactive Token Refresh Countdown
+        // 3. Reactive Token Refresh Countdown
         startTokenRefreshTimer()
     }
 
@@ -99,11 +92,31 @@ class MainContentViewModel(
     }
 
     fun loadProfileData(profileId: String) {
+        // Load profile basic data (profile, announces, lifeStatus) into ProfileViewModel
         profileViewModel.loadProfileBasicData(profileId)
+        
+        // Load lifeStatus separately for MainContent's lifeStatusState
+        loadLifeStatus(profileId)
+    }
+
+    private fun loadLifeStatus(profileId: String) {
+        viewModelScope.launch {
+            _lifeStatusState.value = UiState.Loading
+            when (val result = profileRepository.getLifeStatus(profileId)) {
+                is NetworkResult.Success -> {
+                    _lifeStatusState.value = UiState.Success(result.data)
+                }
+                is NetworkResult.Failure -> {
+                    _lifeStatusState.value = UiState.Error(
+                        UiError.StringRes(result.error.asStringResource())
+                    )
+                }
+            }
+        }
     }
 
     fun refreshLifeStatus(profileId: String) {
-        profileViewModel.loadProfileBasicData(profileId)
+        loadLifeStatus(profileId)
     }
 
     companion object {

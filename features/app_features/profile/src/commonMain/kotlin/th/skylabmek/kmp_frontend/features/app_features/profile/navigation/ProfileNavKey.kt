@@ -9,8 +9,11 @@ sealed interface ProfileNavKey : NavKey {
     data object Profile : ProfileNavKey
 
     @Serializable
+    data object ProfileAdmin : ProfileNavKey
+
+    @Serializable
     data object Login : ProfileNavKey
 
     @Serializable
-    data class Performance(val profileId: String) : ProfileNavKey
+    data class PerformanceAdmin(val profileId: String) : ProfileNavKey
 }

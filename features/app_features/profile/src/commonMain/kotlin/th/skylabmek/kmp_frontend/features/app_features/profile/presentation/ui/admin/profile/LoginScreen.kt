@@ -1,4 +1,4 @@
-package th.skylabmek.kmp_frontend.features.app_features.profile.presentation.ui.profile
+package th.skylabmek.kmp_frontend.features.app_features.profile.presentation.ui.admin.profile
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*

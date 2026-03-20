@@ -1,4 +1,4 @@
-package th.skylabmek.kmp_frontend.features.app_features.profile.presentation.ui.performance
+package th.skylabmek.kmp_frontend.features.app_features.profile.presentation.ui.admin.performance
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -13,7 +13,7 @@ import th.skylabmek.kmp_frontend.features.feature.performance.presentation.ui.pe
 import th.skylabmek.kmp_frontend.features.feature.performance.presentation.components.performance.privatePerformance.PerformanceFullContent
 
 @Composable
-fun PerformanceScreen(
+fun PerformanceScreenAdmin(
     appViewModel: AppViewModel,
     profileId: String,
     appId: String = "skylabmek-portfolio" // Default or injected appId

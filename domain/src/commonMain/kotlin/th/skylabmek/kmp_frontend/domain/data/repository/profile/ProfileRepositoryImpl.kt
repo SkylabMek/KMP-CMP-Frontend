@@ -25,6 +25,15 @@ class ProfileRepositoryImpl(
         )
     }
 
+    override suspend fun getPublicProfile(profileId: String): NetworkResult<ProfileResult> {
+        return networkClient.executeWrapped(
+            reqSpec = RequestSpec(
+                method = HttpMethod.Get,
+                path = "/profiles/$profileId/public"
+            ),
+        )
+    }
+
     override suspend fun getAnnounces(profileId: String): NetworkResult<AnnounceResponse> {
         return networkClient.executeWrapped(
             reqSpec = RequestSpec(

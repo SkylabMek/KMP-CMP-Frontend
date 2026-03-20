@@ -9,6 +9,7 @@ import th.skylabmek.kmp_frontend.domain.model.profile.ProfileResult
 
 interface ProfileRepository {
     suspend fun getProfile(profileId: String): NetworkResult<ProfileResult>
+    suspend fun getPublicProfile(profileId: String): NetworkResult<ProfileResult>
     suspend fun getAnnounces(profileId: String): NetworkResult<AnnounceResponse>
     suspend fun getLifeStatus(profileId: String): NetworkResult<LifeStatus>
     suspend fun getPublicPerformances(profileId: String): NetworkResult<PerformanceListResult>

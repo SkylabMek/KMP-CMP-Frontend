@@ -153,7 +153,7 @@ fun AppDrawer(
                                     .alpha(0.2f)
                                     .clickable {
                                         scope.launch { drawerState.close() }
-                                        navigator.navigate(ProfileNavKey.Profile)
+                                        navigator.navigate(ProfileNavKey.ProfileAdmin)
                                     },
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )

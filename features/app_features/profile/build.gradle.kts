@@ -103,6 +103,9 @@ kotlin {
                 implementation(project(":navigation"))
                 implementation(libs.bundles.navigation3)
 
+                // Coil
+                implementation(libs.bundles.coil)
+
                 // Add KMP dependencies here
             }
         }

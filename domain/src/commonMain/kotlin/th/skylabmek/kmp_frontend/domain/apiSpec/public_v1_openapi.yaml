@@ -50,6 +50,15 @@ components:
           $ref: '#/components/schemas/WebsiteFeatureStatusesResult'
         error:
           $ref: '#/components/schemas/ApiError'
+    ApiResponse_AppConfigResult:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/AppConfigResult'
+        error:
+          $ref: '#/components/schemas/ApiError'
     ApiResponse_PerformanceListResult:
       type: object
       properties:
@@ -72,6 +81,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Skill'
+        scales:
+          type: array
+          items:
+            $ref: '#/components/schemas/Scale'
         socials:
           type: array
           items:
@@ -128,6 +141,19 @@ components:
         description:
           type: string
           nullable: true
+    Scale:
+      type: object
+      properties:
+        id:
+          type: string
+        min:
+          type: number
+          format: double
+        max:
+          type: number
+          format: double
+        is_decimal:
+          type: boolean
     Social:
       type: object
       properties:
@@ -214,6 +240,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/FeatureStatusResult'
+    AppConfigResult:
+      type: object
+      properties:
+        icon_base_url:
+          type: string
     Performance:
       type: object
       properties:
@@ -326,6 +357,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse_WebsiteFeatureStatusesResult'
+  /app/{appID}/config:
+    get:
+      summary: Get application configuration
+      parameters:
+        - name: appID
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Application configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse_AppConfigResult'
   /profiles/{profile_id}/publicPerformances:
     get:
       summary: Get public performances

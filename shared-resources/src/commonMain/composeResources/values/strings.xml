@@ -156,4 +156,21 @@
     <string name="visibility_draft_name">Draft</string>
     <string name="visibility_private_name">Private</string>
     <string name="visibility_public_name">Public</string>
+
+    <!-- Profile Sections -->
+    <string name="profile_section_about">About</string>
+    <string name="profile_section_skills">Skills</string>
+    <string name="profile_section_connect">Connect</string>
+
+    <!-- Skill Scales -->
+    <string name="scale_label_cefr">Language Proficiency (CEFR)</string>
+    <string name="scale_label_reference">Reference</string>
+    <string name="scale_label_rating_5">Rating (1 - 5)</string>
+    <string name="scale_label_rating_10">Rating (1 - 10)</string>
+    <string name="scale_label_score_10">Score (0.0 - 10.0)</string>
+    <string name="scale_label_percentage">Percentage (0 - 100%)</string>
+    <string name="scale_label_score_5">Score (0.0 - 5.0)</string>
+    <string name="scale_label_familiarity">Familiarity (0 - 10)</string>
+    <string name="scale_label_default">Skill Level</string>
+    <string name="scale_reference_only">Reference Only</string>
 </resources>

@@ -23,5 +23,6 @@ data class ProfileResult(
     val profile: Profile,
     val announces: List<Announce> = emptyList(),
     val skills: List<Skill> = emptyList(),
+    val scales: List<Scale> = emptyList(),
     val socials: List<Social> = emptyList()
 )

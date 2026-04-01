@@ -40,6 +40,7 @@ class BuildKonfigConventionPlugin : Plugin<Project> {
                 val prodBaseUrl = "https://api.skylabmek.net/"
                 val devBaseUrl = "http://localhost:3000"
                 val devAndroidBaseUrl = "http://10.0.2.2:3000"
+                val brandfetchClientId = "1idi9KbP-wRzPrDwdwW"
 
                 // Default Configuration (Visible in commonMain)
                 // This is dynamically configured based on the build environment to work seamlessly with KMP tasks
@@ -49,6 +50,7 @@ class BuildKonfigConventionPlugin : Plugin<Project> {
                     buildConfigField(Type.STRING, "PROFILE_ID", if (isProduction) "profile_001" else "profile_001")
                     buildConfigField(Type.STRING, "APP_ID", if (isProduction) "website_main_001" else "website_main_001")
                     buildConfigField(Type.STRING, "BASE_URL", if (isProduction) prodBaseUrl else devBaseUrl)
+                    buildConfigField(Type.STRING, "BRANDFETCH_CLIENT_ID", brandfetchClientId)
                 }
 
                 // Target-specific overrides for the default configuration
@@ -65,6 +67,7 @@ class BuildKonfigConventionPlugin : Plugin<Project> {
                     buildConfigField(Type.STRING, "PROFILE_ID", "profile_001")
                     buildConfigField(Type.STRING, "APP_ID", "website_main_001")
                     buildConfigField(Type.STRING, "BASE_URL", devBaseUrl)
+                    buildConfigField(Type.STRING, "BRANDFETCH_CLIENT_ID", brandfetchClientId)
                 }
 
                 defaultConfigs("production") {
@@ -73,6 +76,7 @@ class BuildKonfigConventionPlugin : Plugin<Project> {
                     buildConfigField(Type.STRING, "PROFILE_ID", "profile_001")
                     buildConfigField(Type.STRING, "APP_ID", "website_main_001")
                     buildConfigField(Type.STRING, "BASE_URL", prodBaseUrl)
+                    buildConfigField(Type.STRING, "BRANDFETCH_CLIENT_ID", brandfetchClientId)
                 }
             }
         }

@@ -44,6 +44,12 @@ kotlin {
             }
         }
 
+        val androidMain by getting {
+            dependencies {
+                implementation(libs.koin.android)
+            }
+        }
+
         val wasmJsMain by getting {
             dependencies {
                 implementation(libs.kotlinx.browser)

@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Code
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,14 +21,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import th.skylabmek.kmp_frontend.core.common.UiState
-import th.skylabmek.kmp_frontend.domain.model.profile.Profile
-import th.skylabmek.kmp_frontend.domain.model.profile.ProfileResult
-import th.skylabmek.kmp_frontend.domain.model.profile.Skill
-import th.skylabmek.kmp_frontend.domain.model.profile.Social
+import th.skylabmek.kmp_frontend.domain.model.profile.*
+import th.skylabmek.kmp_frontend.features.app_features.profile.components.common.BrandIcon
+import th.skylabmek.kmp_frontend.features.app_features.profile.components.scale.ScaleIndicator
+import th.skylabmek.kmp_frontend.features.app_features.profile.components.social.SocialIcon
 import th.skylabmek.kmp_frontend.features.app_features.profile.presentation.viewmodel.ProfilePublicViewModel
 import th.skylabmek.kmp_frontend.shared_resources.Res
-import th.skylabmek.kmp_frontend.shared_resources.ic_profile
+import th.skylabmek.kmp_frontend.shared_resources.*
+import th.skylabmek.kmp_frontend.ui.common.ComponentPreviewWrapper
+import th.skylabmek.kmp_frontend.ui.common.DevicePreviews
 import th.skylabmek.kmp_frontend.ui.components.layout.DefaultErrorContent
 import th.skylabmek.kmp_frontend.ui.components.layout.DefaultLoadingContent
 import th.skylabmek.kmp_frontend.ui.dimens.Dimens
@@ -79,10 +84,10 @@ private fun PublicProfileContent(data: ProfileResult) {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(horizontalSpacing)
                 ) {
-                    Box(modifier = Modifier.weight(1f)) {
+                    Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
                         HeaderSection(profile)
                     }
-                    Box(modifier = Modifier.weight(1f)) {
+                    Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
                         SocialsSection(data.socials, uriHandler)
                     }
                 }
@@ -163,6 +168,14 @@ private fun HeaderSection(profile: Profile) {
             fontWeight = FontWeight.Bold
         )
 
+        profile.contactEmail?.let {
+            Text(
+                text = it,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+
         profile.headline?.let {
             Text(
                 text = it,
@@ -193,7 +206,7 @@ private fun BioSection(bio: String?) {
         ) {
             Column(modifier = Modifier.padding(Dimens.spaceMedium)) {
                 Text(
-                    text = "About",
+                    text = stringResource(Res.string.profile_section_about),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
@@ -213,32 +226,86 @@ private fun SkillsSection(skills: List<Skill>) {
             verticalArrangement = Arrangement.spacedBy(Dimens.spaceSmall)
         ) {
             Text(
-                text = "Skills",
+                text = stringResource(Res.string.profile_section_skills),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
             
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(Dimens.spaceSmall),
-                verticalArrangement = Arrangement.spacedBy(Dimens.spaceSmall)
+                horizontalArrangement = Arrangement.spacedBy(Dimens.spaceMedium),
+                verticalArrangement = Arrangement.spacedBy(Dimens.spaceMedium),
+                maxItemsInEachRow = 2
             ) {
                 skills.forEach { skill ->
-                    SuggestionChip(
-                        onClick = {},
-                        label = { 
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                skill.logoUrl?.let {
-                                    AsyncImage(
-                                        model = it,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(16.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(4.dp))
-                                }
-                                Text(skill.name) 
-                            }
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(4.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            BrandIcon(
+                                logoUrl = skill.logoUrl,
+                                domain = "${skill.name.lowercase().replace(" ", "")}.com",
+                                contentDescription = skill.name,
+                                size = 24.dp,
+                                padding = 4.dp,
+                                fallbackIcon = Icons.Default.Code
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = skill.name,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Medium
+                            )
                         }
+                        
+                        ScaleIndicator(
+                            scaleId = skill.scaleId,
+                            value = skill.scaleValue,
+                            modifier = Modifier.fillMaxWidth().padding(start = 32.dp)
+                        )
+                        
+                        skill.description?.let {
+                            Text(
+                                text = it,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.padding(start = 32.dp)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun SocialsSection(socials: List<Social>, uriHandler: UriHandler) {
+    if (socials.isNotEmpty()) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(Dimens.spaceSmall),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = stringResource(Res.string.profile_section_connect),
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
+            
+            FlowRow(
+                modifier = Modifier.wrapContentWidth(),
+                horizontalArrangement = Arrangement.spacedBy(Dimens.spaceMedium, Alignment.CenterHorizontally),
+                verticalArrangement = Arrangement.spacedBy(Dimens.spaceMedium)
+            ) {
+                socials.forEach { social ->
+                    SocialIcon(
+                        social = social,
+                        uriHandler = uriHandler
                     )
                 }
             }
@@ -246,41 +313,124 @@ private fun SkillsSection(skills: List<Skill>) {
     }
 }
 
+@DevicePreviews
 @Composable
-private fun SocialsSection(socials: List<Social>, uriHandler: UriHandler) {
-    if (socials.isNotEmpty()) {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(Dimens.spaceSmall)
-        ) {
-            Text(
-                text = "Connect",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
-            )
-            
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(Dimens.spaceMedium)
-            ) {
-                socials.forEach { social ->
-                    IconButton(onClick = { 
-                        try {
-                            uriHandler.openUri(social.link)
-                        } catch (e: Exception) {
-                            // Handle invalid URI if necessary
-                        }
-                    }) {
-                        AsyncImage(
-                            model = social.logoUrl,
-                            contentDescription = social.name,
-                            modifier = Modifier.size(24.dp),
-                            error = painterResource(Res.drawable.ic_profile),
-                            placeholder = painterResource(Res.drawable.ic_profile)
-                        )
-                    }
-                }
-            }
-        }
+fun ProfileScreenPublicUiPreview() {
+    val mockProfile = Profile(
+        id = "profile_001",
+        userId = "user_admin_001",
+        displayName = "Praisarn Sormkaew",
+        headline = "Software Developer",
+        bio = "Personal website showcasing projects, skills, and achievements.",
+        avatarUrl = null,
+        contactEmail = "admin@example.com",
+        createdAt = "2025-12-23",
+        currentStatusId = "life_limited",
+        currentStatus = LifeStatus(
+            name = "Limited Availability",
+            description = "Some availability with constraints",
+            colorToken = "LIMITED"
+        )
+    )
+
+    val mockSkills = listOf(
+        Skill(
+            id = "skill_lang_en",
+            name = "English",
+            skillType = "Communication Language",
+            scaleId = "scale_cefr",
+            scaleValue = 5.0,
+            description = "Professional working proficiency"
+        ),
+        Skill(
+            id = "skill_lang_th",
+            name = "Thai",
+            skillType = "Communication Language",
+            scaleId = "scale_cefr",
+            scaleValue = 6.0,
+            description = "Native language"
+        ),
+        Skill(
+            id = "skill_rust",
+            name = "Rust",
+            skillType = "Programming Language",
+            scaleId = "scale_1_5_int",
+            scaleValue = 4.0,
+            description = "Backend development with Rust"
+        ),
+        Skill(
+            id = "skill_sql",
+            name = "SQL",
+            skillType = "Programming Language",
+            scaleId = "scale_1_5_int",
+            scaleValue = 4.0,
+            description = "Relational database design and queries"
+        ),
+        Skill(
+            id = "skill_docker",
+            name = "Docker",
+            skillType = "Tool",
+            scaleId = "scale_1_5_int",
+            scaleValue = 3.0,
+            description = "Containerized development"
+        ),
+        Skill(
+            id = "skill_linux",
+            name = "Linux",
+            skillType = "Platform",
+            scaleId = "scale_familiar_10",
+            scaleValue = 7.5,
+            description = "Daily development environment"
+        ),
+        Skill(
+            id = "skill_teamwork",
+            name = "Teamwork",
+            skillType = "Soft Skill",
+            scaleId = "scale_familiar_10",
+            scaleValue = 8.0,
+            description = "Collaborative project work"
+        ),
+        Skill(
+            id = "skill_other_framework",
+            name = "Other Framework",
+            skillType = "Framework",
+            scaleId = "scale_familiar_10",
+            scaleValue = 1.0,
+            description = "Experience with various frameworks"
+        )
+    )
+
+    val mockScales = listOf(
+        Scale.SCALE_0_10_DECIMAL,
+        Scale.SCALE_0_100_INT,
+        Scale.SCALE_0_5_DECIMAL,
+        Scale.SCALE_1_10_INT,
+        Scale.SCALE_1_5_INT,
+        Scale.SCALE_CEFR,
+        Scale.SCALE_FAMILIAR_10,
+        Scale.SCALE_REFERENCE
+    )
+
+    val mockSocials = listOf(
+        Social(id = "social_github", name = "GitHub", link = "https://github.com/yourusername"),
+        Social(id = "social_linkedin", name = "LinkedIn", link = "https://linkedin.com/in/yourusername"),
+        Social(id = "social_facebook", name = "Facebook", link = "https://facebook.com/yourusername"),
+        Social(
+            id = "social_discord",
+            name = "Discord",
+            link = "https://discord.com/users/720840047779381271",
+            logoUrl = "https://storage.googleapis.com/personal-website_storage_dev/resource/social/logo/Discord%20Social.png"
+        )
+    )
+
+    val mockData = ProfileResult(
+        profile = mockProfile,
+        skills = mockSkills,
+        scales = mockScales,
+        socials = mockSocials
+    )
+
+    ComponentPreviewWrapper {
+        PublicProfileContent(data = mockData)
     }
 }

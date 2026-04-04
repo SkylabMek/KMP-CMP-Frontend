@@ -1,4 +1,4 @@
-package th.skylabmek.kmp_frontend.features.app_features.profile.presentation.ui.profile
+package th.skylabmek.kmp_frontend.features.app_features.profile.presentation.ui.admin.profile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -32,7 +32,7 @@ import th.skylabmek.kmp_frontend.shared_resources.ic_profile
 import th.skylabmek.kmp_frontend.shared_resources.announcements_header
 
 @Composable
-fun ProfileScreen(
+fun ProfileScreenAdmin(
     viewModel: ProfileViewModel,
     profileId: String
 ) {
@@ -71,7 +71,7 @@ fun ProfileScreen(
                             onLogout = { viewModel.logout() },
                             onNavigateToPerformance = { 
                                 val idToNavigate = basicData.data.profile?.id ?: me.id
-                                navigator.navigate(ProfileNavKey.Performance(idToNavigate))
+                                navigator.navigate(ProfileNavKey.PerformanceAdmin(idToNavigate))
                             }
                         )
                     }
@@ -80,7 +80,7 @@ fun ProfileScreen(
                             me = me,
                             profile = null,
                             onLogout = { viewModel.logout() },
-                            onNavigateToPerformance = { navigator.navigate(ProfileNavKey.Performance(me.id)) }
+                            onNavigateToPerformance = { navigator.navigate(ProfileNavKey.PerformanceAdmin(me.id)) }
                         )
                     }
                 }

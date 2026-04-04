@@ -21,7 +21,7 @@ import th.skylabmek.kmp_frontend.domain.model.profile.LifeStatus
 import th.skylabmek.kmp_frontend.domain.model.profile.Profile
 import th.skylabmek.kmp_frontend.domain.repository.auth.AuthRepository
 import th.skylabmek.kmp_frontend.domain.repository.profile.ProfileRepository
-import th.skylabmek.kmp_frontend.features.app_features.profile.presentation.ui.profile.LoginState
+import th.skylabmek.kmp_frontend.features.app_features.profile.presentation.ui.admin.profile.LoginState
 import th.skylabmek.kmp_frontend.shared_resources.Res
 import th.skylabmek.kmp_frontend.shared_resources.error_unknown
 

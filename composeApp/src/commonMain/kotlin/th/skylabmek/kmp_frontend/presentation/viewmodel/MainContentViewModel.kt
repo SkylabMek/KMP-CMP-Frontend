@@ -36,8 +36,8 @@ class MainContentViewModel(
     val themeSetting: StateFlow<ThemeSetting> = _themeSetting.asStateFlow()
 
     init {
-        // 1. Initial Check: If the refresh token itself is expired, clear everything immediately
-        checkInitialAuthStatus()
+        // 1. Initial Check
+
 
         // 2. Observe theme setting changes from local storage
         viewModelScope.launch {
@@ -53,13 +53,6 @@ class MainContentViewModel(
 
         // 3. Reactive Token Refresh Countdown
         startTokenRefreshTimer()
-    }
-
-    private fun checkInitialAuthStatus() {
-        if (isRefreshTokenExpired(localSettings)) {
-            // Refresh token is dead, user must log in again
-            localSettings.clear() 
-        }
     }
 
     private fun startTokenRefreshTimer() {

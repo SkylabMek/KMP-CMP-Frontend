@@ -20,6 +20,10 @@ kotlin {
         compileSdk = 36
         minSdk = 24
 
+        androidResources {
+            enable = true
+        }
+
         withHostTestBuilder {
         }
 

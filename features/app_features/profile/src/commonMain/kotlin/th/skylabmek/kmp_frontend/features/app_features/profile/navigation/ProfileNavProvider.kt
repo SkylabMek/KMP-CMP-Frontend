@@ -4,9 +4,10 @@ import androidx.navigation3.runtime.EntryProviderScope
 import kotlinx.serialization.modules.PolymorphicModuleBuilder
 import org.koin.compose.viewmodel.koinViewModel
 import th.skylabmek.kmp_frontend.features.feature.app.presentation.viewmodel.AppViewModel
-import th.skylabmek.kmp_frontend.features.app_features.profile.presentation.ui.performance.PerformanceScreen
-import th.skylabmek.kmp_frontend.features.app_features.profile.presentation.ui.profile.LoginScreen
-import th.skylabmek.kmp_frontend.features.app_features.profile.presentation.ui.profile.ProfileScreen
+import th.skylabmek.kmp_frontend.features.app_features.profile.presentation.ui.admin.performance.PerformanceScreenAdmin
+import th.skylabmek.kmp_frontend.features.app_features.profile.presentation.ui.admin.profile.LoginScreen
+import th.skylabmek.kmp_frontend.features.app_features.profile.presentation.ui.admin.profile.ProfileScreenAdmin
+import th.skylabmek.kmp_frontend.features.app_features.profile.presentation.ui.publicUI.ProfileScreenPublicUi
 import th.skylabmek.kmp_frontend.navigation.tools.FeatureNavProvider
 import th.skylabmek.kmp_frontend.navigation.tools.NavKey
 
@@ -15,7 +16,13 @@ class ProfileNavProvider(
 ) : FeatureNavProvider {
     override fun EntryProviderScope<NavKey>.navigationBuilder() {
         entry<ProfileNavKey.Profile> {
-            ProfileScreen(
+            ProfileScreenPublicUi(
+                viewModel = koinViewModel(),
+                profileId = profileId
+            )
+        }
+        entry<ProfileNavKey.ProfileAdmin> {
+            ProfileScreenAdmin(
                 viewModel = koinViewModel(),
                 profileId = profileId
             )
@@ -23,9 +30,9 @@ class ProfileNavProvider(
         entry<ProfileNavKey.Login> {
             LoginScreen()
         }
-        entry<ProfileNavKey.Performance> { key ->
+        entry<ProfileNavKey.PerformanceAdmin> { key ->
             val appViewModel: AppViewModel = koinViewModel()
-            PerformanceScreen(
+            PerformanceScreenAdmin(
                 appViewModel = appViewModel,
                 profileId = key.profileId
             )
@@ -34,17 +41,19 @@ class ProfileNavProvider(
 
     override fun registerSerializers(polymorphicModuleBuilder: PolymorphicModuleBuilder<NavKey>) {
         polymorphicModuleBuilder.subclass(ProfileNavKey.Profile::class, ProfileNavKey.Profile.serializer())
+        polymorphicModuleBuilder.subclass(ProfileNavKey.ProfileAdmin::class, ProfileNavKey.ProfileAdmin.serializer())
         polymorphicModuleBuilder.subclass(ProfileNavKey.Login::class, ProfileNavKey.Login.serializer())
-        polymorphicModuleBuilder.subclass(ProfileNavKey.Performance::class, ProfileNavKey.Performance.serializer())
+        polymorphicModuleBuilder.subclass(ProfileNavKey.PerformanceAdmin::class, ProfileNavKey.PerformanceAdmin.serializer())
     }
 
     override fun mapUriToNavKey(uri: String): NavKey? {
         return when {
             uri.endsWith("/profile") -> ProfileNavKey.Profile
+            uri.endsWith("/profile/admin") -> ProfileNavKey.ProfileAdmin
             uri.endsWith("/login") -> ProfileNavKey.Login
             uri.contains("/performance/") -> {
                 val id = uri.substringAfterLast("/")
-                ProfileNavKey.Performance(id)
+                ProfileNavKey.PerformanceAdmin(id)
             }
             else -> null
         }
@@ -53,8 +62,9 @@ class ProfileNavProvider(
     override fun mapNavKeyToUri(key: NavKey): String? {
         return when (key) {
             is ProfileNavKey.Profile -> "/profile"
+            is ProfileNavKey.ProfileAdmin -> "/profile/admin"
             is ProfileNavKey.Login -> "/login"
-            is ProfileNavKey.Performance -> "/performance/${key.profileId}"
+            is ProfileNavKey.PerformanceAdmin -> "/performance/${key.profileId}"
             else -> null
         }
     }

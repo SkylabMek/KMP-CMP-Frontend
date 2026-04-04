@@ -20,7 +20,7 @@ data class Scale(
         val SCALE_CEFR = Scale("scale_cefr", 1.0, 6.0, false)
         val SCALE_FAMILIAR_10 = Scale("scale_familiar_10", 0.0, 10.0, true)
         val SCALE_REFERENCE = Scale("scale_reference", 1.0, 1.0, false)
-
+        val SCALE_FAMILIAR_TEXT = Scale("scale_familiar_text", 1.0, 4.0, false)
         val allScales = listOf(
             SCALE_0_10_DECIMAL,
             SCALE_0_100_INT,
@@ -30,6 +30,7 @@ data class Scale(
             SCALE_CEFR,
             SCALE_FAMILIAR_10,
             SCALE_REFERENCE,
+            SCALE_FAMILIAR_TEXT,
             UNKNOWN
         )
 

@@ -41,6 +41,7 @@ fun ScaleIndicator(
             Scale.SCALE_REFERENCE.id -> ReferenceScale()
             Scale.SCALE_1_5_INT.id -> DiscreteScale(value, 5)
             Scale.SCALE_1_10_INT.id -> DiscreteScale(value, 10)
+            Scale.SCALE_FAMILIAR_TEXT.id -> FamiliarTextScale(value)
             Scale.UNKNOWN.id -> Spacer(Modifier.height(0.dp))
             else -> ProgressBarScale(scale, value)
         }
@@ -175,4 +176,50 @@ private fun ReferenceScale() {
             labelColor = MaterialTheme.colorScheme.onSecondaryContainer
         )
     )
+}
+
+@Composable
+private fun FamiliarTextScale(value: Double) {
+    val levels = listOf(
+        1 to Res.string.scale_familiar_beginner,
+        2 to Res.string.scale_familiar_familiar,
+        3 to Res.string.scale_familiar_fluent,
+        4 to Res.string.scale_familiar_deep
+    )
+    val current = value.toInt().coerceIn(1, 4)
+
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        levels.forEach { (level, label) ->
+            val isActive = level <= current
+            val isCurrent = level == current
+
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(6.dp))
+                    .background(
+                        when {
+                            isCurrent -> MaterialTheme.colorScheme.primary
+                            isActive  -> MaterialTheme.colorScheme.primaryContainer
+                            else      -> MaterialTheme.colorScheme.surfaceVariant
+                        }
+                    )
+                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(label),
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = if (isCurrent) FontWeight.Bold else FontWeight.Normal,
+                    color = when {
+                        isCurrent -> MaterialTheme.colorScheme.onPrimary
+                        isActive  -> MaterialTheme.colorScheme.onPrimaryContainer
+                        else      -> MaterialTheme.colorScheme.onSurfaceVariant
+                    }
+                )
+            }
+        }
+    }
 }

@@ -79,7 +79,7 @@
 
     <!-- Performance Preview construction -->
     <string name="performance_preview_construction_title">Performance section is under development.</string>
-    <string name="performance_preview_construction_msg">While I'm building this feature, you can view my performance highlights and full portfolio on my temporary Notion site.</string>
+    <string name="performance_preview_construction_msg">While I\'m building this feature, you can view my performance highlights and full portfolio on my temporary Notion site.</string>
     <string name="performance_preview_visit_notion">View on Notion</string>
     <string name="performance_preview_visit_old_site">Visit Old Website</string>
     <string name="performance_preview_see_all">See All</string>
@@ -173,4 +173,10 @@
     <string name="scale_label_familiarity">Familiarity (0 - 10)</string>
     <string name="scale_label_default">Skill Level</string>
     <string name="scale_reference_only">Reference Only</string>
+
+    <!-- Familiar Text Scale Labels -->
+    <string name="scale_familiar_beginner">Beginner</string>
+    <string name="scale_familiar_familiar">Familiar</string>
+    <string name="scale_familiar_fluent">Fluent</string>
+    <string name="scale_familiar_deep">Deep</string>
 </resources>

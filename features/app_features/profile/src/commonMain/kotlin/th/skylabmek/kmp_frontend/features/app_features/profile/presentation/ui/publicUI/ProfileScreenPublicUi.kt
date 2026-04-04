@@ -61,7 +61,6 @@ fun ProfileScreenPublicUi(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun PublicProfileContent(data: ProfileResult) {
     val profile = data.profile
@@ -73,36 +72,29 @@ private fun PublicProfileContent(data: ProfileResult) {
         val verticalSpacing = Dimens.spaceLarge
 
         if (isDesktop) {
-            Column(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(Dimens.screenPadding),
-                verticalArrangement = Arrangement.spacedBy(verticalSpacing)
+                horizontalArrangement = Arrangement.spacedBy(horizontalSpacing)
             ) {
-                // Row 1: Header (Left) and Socials (Right)
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(horizontalSpacing)
+                // Left Column: Header, Bio, Socials
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(verticalSpacing),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                        HeaderSection(profile)
-                    }
-                    Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                        SocialsSection(data.socials, uriHandler)
-                    }
+                    HeaderSection(profile)
+                    BioSection(profile.bio)
+                    SocialsSection(data.socials, uriHandler)
                 }
 
-                // Row 2: Bio (Left) and Skills (Right)
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(horizontalSpacing)
+                // Right Column: Skills
+                Column(
+                    modifier = Modifier.weight(1.2f),
+                    verticalArrangement = Arrangement.spacedBy(verticalSpacing)
                 ) {
-                    Box(modifier = Modifier.weight(1f)) {
-                        BioSection(profile.bio)
-                    }
-                    Box(modifier = Modifier.weight(1f)) {
-                        SkillsSection(data.skills)
-                    }
+                    SkillsSection(data.skills)
                 }
             }
         } else {
@@ -217,13 +209,12 @@ private fun BioSection(bio: String?) {
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun SkillsSection(skills: List<Skill>) {
     if (skills.isNotEmpty()) {
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(Dimens.spaceSmall)
+            verticalArrangement = Arrangement.spacedBy(Dimens.spaceMedium)
         ) {
             Text(
                 text = stringResource(Res.string.profile_section_skills),
@@ -231,17 +222,13 @@ private fun SkillsSection(skills: List<Skill>) {
                 fontWeight = FontWeight.Bold
             )
             
-            FlowRow(
+            Column(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(Dimens.spaceMedium),
-                verticalArrangement = Arrangement.spacedBy(Dimens.spaceMedium),
-                maxItemsInEachRow = 2
+                verticalArrangement = Arrangement.spacedBy(Dimens.spaceMedium)
             ) {
                 skills.forEach { skill ->
                     Column(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(4.dp),
+                        modifier = Modifier.fillMaxWidth(),
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {

@@ -18,6 +18,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import org.jetbrains.compose.resources.painterResource
@@ -117,6 +118,8 @@ private fun PublicProfileContent(data: ProfileResult) {
 
 @Composable
 private fun HeaderSection(profile: Profile) {
+    val avatarShape = RoundedCornerShape(Dimens.cardCornerRadius)
+    
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(Dimens.spaceMedium)
@@ -128,7 +131,7 @@ private fun HeaderSection(profile: Profile) {
                 contentDescription = null,
                 modifier = Modifier
                     .size(120.dp)
-                    .clip(CircleShape)
+                    .clip(avatarShape)
                     .background(MaterialTheme.colorScheme.surfaceVariant),
                 contentScale = ContentScale.Crop,
                 error = painterResource(Res.drawable.ic_profile),
@@ -209,6 +212,7 @@ private fun BioSection(bio: String?) {
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun SkillsSection(skills: List<Skill>) {
     if (skills.isNotEmpty()) {
@@ -222,48 +226,65 @@ private fun SkillsSection(skills: List<Skill>) {
                 fontWeight = FontWeight.Bold
             )
             
-            Column(
+            FlowRow(
                 modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(Dimens.spaceMedium),
                 verticalArrangement = Arrangement.spacedBy(Dimens.spaceMedium)
             ) {
                 skills.forEach { skill ->
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            BrandIcon(
-                                logoUrl = skill.logoUrl,
-                                domain = "${skill.name.lowercase().replace(" ", "")}.com",
-                                contentDescription = skill.name,
-                                size = 24.dp,
-                                padding = 4.dp,
-                                fallbackIcon = Icons.Default.Code
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = skill.name,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Medium
-                            )
-                        }
-                        
-                        ScaleIndicator(
-                            scaleId = skill.scaleId,
-                            value = skill.scaleValue,
-                            modifier = Modifier.fillMaxWidth().padding(start = 32.dp)
-                        )
-                        
-                        skill.description?.let {
-                            Text(
-                                text = it,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.padding(start = 32.dp)
-                            )
-                        }
-                    }
+                    SkillItem(skill)
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SkillItem(skill: Skill) {
+    Card(
+        modifier = Modifier.widthIn(min = 160.dp, max = 280.dp),
+        shape = RoundedCornerShape(Dimens.cardCornerRadiusSmall),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f)
+        )
+    ) {
+        Column(
+            modifier = Modifier.padding(Dimens.paddingSmall),
+            verticalArrangement = Arrangement.spacedBy(Dimens.spaceExtraSmall)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                BrandIcon(
+                    logoUrl = skill.logoUrl,
+                    domain = "${skill.name.lowercase().replace(" ", "")}.com",
+                    contentDescription = skill.name,
+                    size = 40.dp, // Bigger icon
+                    padding = 0.dp,
+                    fallbackIcon = Icons.Default.Code
+                )
+                Spacer(modifier = Modifier.width(Dimens.spaceSmall))
+                Text(
+                    text = skill.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+            
+            ScaleIndicator(
+                scaleId = skill.scaleId,
+                value = skill.scaleValue,
+                modifier = Modifier.fillMaxWidth()
+            )
+            
+            skill.description?.let {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
         }
     }
@@ -351,73 +372,22 @@ fun ProfileScreenPublicUiPreview() {
             skillType = "Programming Language",
             scaleId = "scale_1_5_int",
             scaleValue = 4.0,
-            description = "Relational database design and queries"
-        ),
-        Skill(
-            id = "skill_docker",
-            name = "Docker",
-            skillType = "Tool",
-            scaleId = "scale_1_5_int",
-            scaleValue = 3.0,
-            description = "Containerized development"
-        ),
-        Skill(
-            id = "skill_linux",
-            name = "Linux",
-            skillType = "Platform",
-            scaleId = "scale_familiar_10",
-            scaleValue = 7.5,
-            description = "Daily development environment"
-        ),
-        Skill(
-            id = "skill_teamwork",
-            name = "Teamwork",
-            skillType = "Soft Skill",
-            scaleId = "scale_familiar_10",
-            scaleValue = 8.0,
-            description = "Collaborative project work"
-        ),
-        Skill(
-            id = "skill_other_framework",
-            name = "Other Framework",
-            skillType = "Framework",
-            scaleId = "scale_familiar_10",
-            scaleValue = 1.0,
-            description = "Experience with various frameworks"
+            description = "Relational database design"
         )
-    )
-
-    val mockScales = listOf(
-        Scale.SCALE_0_10_DECIMAL,
-        Scale.SCALE_0_100_INT,
-        Scale.SCALE_0_5_DECIMAL,
-        Scale.SCALE_1_10_INT,
-        Scale.SCALE_1_5_INT,
-        Scale.SCALE_CEFR,
-        Scale.SCALE_FAMILIAR_10,
-        Scale.SCALE_REFERENCE
     )
 
     val mockSocials = listOf(
-        Social(id = "social_github", name = "GitHub", link = "https://github.com/yourusername"),
-        Social(id = "social_linkedin", name = "LinkedIn", link = "https://linkedin.com/in/yourusername"),
-        Social(id = "social_facebook", name = "Facebook", link = "https://facebook.com/yourusername"),
-        Social(
-            id = "social_discord",
-            name = "Discord",
-            link = "https://discord.com/users/720840047779381271",
-            logoUrl = "https://storage.googleapis.com/personal-website_storage_dev/resource/social/logo/Discord%20Social.png"
-        )
-    )
-
-    val mockData = ProfileResult(
-        profile = mockProfile,
-        skills = mockSkills,
-        scales = mockScales,
-        socials = mockSocials
+        Social(id = "s1", name = "GitHub", link = "https://github.com"),
+        Social(id = "s2", name = "LinkedIn", link = "https://linkedin.com")
     )
 
     ComponentPreviewWrapper {
-        PublicProfileContent(data = mockData)
+        PublicProfileContent(
+            data = ProfileResult(
+                profile = mockProfile,
+                skills = mockSkills,
+                socials = mockSocials
+            )
+        )
     }
 }

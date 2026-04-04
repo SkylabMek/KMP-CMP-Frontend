@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material3.Icon
@@ -15,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
@@ -27,6 +29,7 @@ import th.skylabmek.kmp_frontend.domain.model.app.AppConfig
 import th.skylabmek.kmp_frontend.shared_resources.Res
 import th.skylabmek.kmp_frontend.shared_resources.ic_profile
 import th.skylabmek.kmp_frontend.ui.config.LocalAppConfig
+import th.skylabmek.kmp_frontend.ui.dimens.Dimens
 
 @Composable
 fun BrandIcon(
@@ -35,10 +38,11 @@ fun BrandIcon(
     contentDescription: String?,
     modifier: Modifier = Modifier,
     size: Dp = 40.dp,
-    padding: Dp = 0.dp, // Default to 0 so the image can fill the circle
+    padding: Dp = 0.dp,
     fallbackIcon: ImageVector = Icons.Default.Link,
     backgroundColor: Color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f),
-    iconColor: Color = MaterialTheme.colorScheme.primary
+    iconColor: Color = MaterialTheme.colorScheme.primary,
+    shape: Shape = RoundedCornerShape(Dimens.cardCornerRadiusSmall)
 ) {
     val appConfigState = LocalAppConfig.current
     val appConfig = if (appConfigState is UiState.Success<AppConfig>) appConfigState.data else null
@@ -73,7 +77,7 @@ fun BrandIcon(
     Box(
         modifier = modifier
             .size(size)
-            .clip(CircleShape)
+            .clip(shape)
             .background(backgroundColor)
             .padding(padding),
         contentAlignment = Alignment.Center
@@ -84,8 +88,8 @@ fun BrandIcon(
                 contentDescription = contentDescription,
                 modifier = Modifier
                     .fillMaxSize()
-                    .clip(CircleShape), // Clip the image itself to remove square corners
-                contentScale = ContentScale.Crop, // Crop to fill the circular container
+                    .clip(shape),
+                contentScale = ContentScale.Crop,
                 error = painterResource(Res.drawable.ic_profile),
                 placeholder = painterResource(Res.drawable.ic_profile)
             )
@@ -95,7 +99,7 @@ fun BrandIcon(
                 contentDescription = contentDescription,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(size * 0.2f), // Add internal padding only for vector icons
+                    .padding(size * 0.2f),
                 tint = iconColor
             )
         }

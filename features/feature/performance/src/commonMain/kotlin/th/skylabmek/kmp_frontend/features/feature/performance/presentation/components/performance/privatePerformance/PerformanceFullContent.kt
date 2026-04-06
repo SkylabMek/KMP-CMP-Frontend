@@ -33,7 +33,7 @@ import th.skylabmek.kmp_frontend.ui.components.layout.DefaultLoadingContent
 fun PerformanceFullContent(
     performance: Performance,
     profileId: String,
-    onClose: () -> Unit,
+    onClose: (hasChanges: Boolean) -> Unit,
     performanceContentViewModel: PerformanceContentViewModel = koinViewModel(),
     performanceEditorViewModel: PerformanceEditorViewModel = koinViewModel(),
     modifier: Modifier = Modifier
@@ -46,6 +46,7 @@ fun PerformanceFullContent(
     var isEditingContent by remember { mutableStateOf(false) }
     var showInfoEditor by remember { mutableStateOf(false) }
     var editedContent by remember { mutableStateOf("") }
+    var hasChanges by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(performance.id, performance.contentUrl) {
@@ -66,6 +67,7 @@ fun PerformanceFullContent(
     // Handle content save success
     LaunchedEffect(saveState) {
         if (saveState is UiState.Success) {
+            hasChanges = true
             isEditingContent = false
             performanceEditorViewModel.resetSaveState()
             performance.contentUrl?.let { performanceContentViewModel.loadPerformanceContent(it) }
@@ -75,6 +77,7 @@ fun PerformanceFullContent(
     // Handle info update success
     LaunchedEffect(updateState) {
         if (updateState is UiState.Success) {
+            hasChanges = true
             showInfoEditor = false
             performanceContentViewModel.resetUpdateState()
         }
@@ -84,7 +87,7 @@ fun PerformanceFullContent(
     LaunchedEffect(deleteState) {
         if (deleteState is UiState.Success) {
             performanceContentViewModel.resetDeleteState()
-            onClose()
+            onClose(true)
         }
     }
 
@@ -105,7 +108,7 @@ fun PerformanceFullContent(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = onClose) {
+                    IconButton(onClick = { onClose(hasChanges) }) {
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = stringResource(Res.string.dialog_close)
@@ -158,7 +161,7 @@ fun PerformanceFullContent(
             if (performance.contentUrl.isNullOrBlank()) {
                 DefaultErrorContent(
                     error = UiError.DynamicString("No content URL provided for this performance."),
-                    onRetry = onClose
+                    onRetry = { onClose(hasChanges) }
                 )
             } else {
                 when (val state = contentState) {

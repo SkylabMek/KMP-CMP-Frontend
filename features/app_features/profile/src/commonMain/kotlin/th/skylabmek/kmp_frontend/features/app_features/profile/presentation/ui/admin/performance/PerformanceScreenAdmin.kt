@@ -97,10 +97,12 @@ fun PerformanceScreenAdmin(
                 PerformanceFullContent(
                     performance = selectedPerformance!!,
                     profileId = profileId,
-                    onClose = { 
+                    onClose = { hasChanges ->
                         selectedPerformance = null
-                        // Refresh the list when returning from detail/editor in case changes were made
-                        performanceListViewModel.loadPerformances(profileId)
+                        if (hasChanges) {
+                            // Refresh the list when returning from detail/editor only if changes were made
+                            performanceListViewModel.loadPerformances(profileId)
+                        }
                     }
                 )
             }

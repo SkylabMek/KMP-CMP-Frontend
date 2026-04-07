@@ -50,6 +50,11 @@ interface PerformanceRepository {
         offset: Int? = null
     ): NetworkResult<ImageListResult>
 
+    suspend fun getImageDetails(
+        profileId: String,
+        imageId: String
+    ): NetworkResult<ImageResult>
+
     suspend fun uploadImage(
         profileId: String,
         fileBytes: ByteArray,
@@ -59,8 +64,51 @@ interface PerformanceRepository {
         caption: String? = null
     ): NetworkResult<ImageResult>
 
+    suspend fun updateImageMetadata(
+        profileId: String,
+        imageId: String,
+        altText: String?,
+        caption: String?
+    ): NetworkResult<MessageResult>
+
+    suspend fun deleteImage(
+        profileId: String,
+        imageId: String
+    ): NetworkResult<MessageResult>
+
     suspend fun forceDeleteImage(
         profileId: String,
         imageId: String
     ): NetworkResult<MessageResult>
+
+    suspend fun getPerformanceImages(
+        profileId: String,
+        performanceId: String
+    ): NetworkResult<PerformanceImagesResult>
+
+    suspend fun getImagePerformances(
+        profileId: String,
+        imageId: String
+    ): NetworkResult<ImageUsageResult>
+
+    suspend fun trackImageUsage(
+        profileId: String,
+        request: TrackImageUsageRequest
+    ): NetworkResult<MessageResult>
+
+    suspend fun untrackImageUsage(
+        profileId: String,
+        request: TrackImageUsageRequest
+    ): NetworkResult<MessageResult>
+
+    suspend fun getUnusedImages(
+        profileId: String,
+        daysOld: Int? = null
+    ): NetworkResult<UnusedImagesResult>
+
+    suspend fun deleteUnusedImages(
+        profileId: String,
+        confirm: Boolean,
+        daysOld: Int? = null
+    ): NetworkResult<DeleteUnusedImagesResult>
 }

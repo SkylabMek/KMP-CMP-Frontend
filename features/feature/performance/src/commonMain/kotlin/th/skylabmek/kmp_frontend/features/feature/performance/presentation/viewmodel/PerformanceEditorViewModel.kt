@@ -13,6 +13,7 @@ import th.skylabmek.kmp_frontend.domain.model.performances.PerformanceContentUpd
 import th.skylabmek.kmp_frontend.domain.model.performances.UpdatePerformanceContentRequest
 import th.skylabmek.kmp_frontend.domain.repository.performances.PerformanceRepository
 import th.skylabmek.kmp_frontend.features.feature.markdown.model.MarkdownImage
+import th.skylabmek.kmp_frontend.features.feature.markdown.model.MarkdownImagePerformance
 
 class PerformanceEditorViewModel(
     private val performanceRepository: PerformanceRepository
@@ -37,7 +38,17 @@ class PerformanceEditorViewModel(
                             MarkdownImage(
                                 imageId = img.id,
                                 filename = img.filename,
-                                imageUrl = img.storageUrl
+                                imageUrl = img.storageUrl,
+                                usageCount = img.usageCount ?: 0,
+                                performances = img.performances?.map { perf ->
+                                    MarkdownImagePerformance(
+                                        performanceId = perf.performanceId,
+                                        title = perf.title,
+                                        usageCount = perf.usageCount,
+                                        firstUsedAt = perf.firstUsedAt,
+                                        lastUsedAt = perf.lastUsedAt
+                                    )
+                                }
                             )
                         )
                     }

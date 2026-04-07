@@ -3,6 +3,8 @@ package th.skylabmek.kmp_frontend.features.feature.markdown.ui.components.editor
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -79,6 +81,19 @@ fun MarkdownEditor(
         onValueChange(command.execute(value))
     }
 
+    val imageUsageInDoc = remember(value.text, imageState) {
+        if (imageState is UiState.Success) {
+            imageState.data.filterIsInstance<UiState.Success<MarkdownImage>>()
+                .associate { state ->
+                    val image = state.data
+                    val count = value.text.split(image.imageUrl).size - 1
+                    image.imageUrl to count
+                }
+        } else {
+            emptyMap()
+        }
+    }
+
     Column(modifier = modifier) {
         MarkdownToolbar(
             onCommand = handleCommand,
@@ -94,7 +109,8 @@ fun MarkdownEditor(
                 onImageSelect = { image ->
                     handleCommand(MarkdownCommands.image(image.imageUrl))
                     showImagePicker = false
-                }
+                },
+                imageUsageInDoc = imageUsageInDoc
             )
         }
 
@@ -107,7 +123,8 @@ fun MarkdownEditor(
                     showFullImagePicker = false
                     showImagePicker = false
                 },
-                onDeleteImage = onDeleteImage
+                onDeleteImage = onDeleteImage,
+                imageUsageInDoc = imageUsageInDoc
             )
         }
 
@@ -131,9 +148,13 @@ fun MarkdownEditor(
                 )
 
                 is UiState.Success -> {
-                    val imagesInDoc = remember(value.text, imageState.data) {
+                    val imagesInDoc = remember(value.text, imageState.data, imageUsageInDoc) {
                         imageState.data.filterIsInstance<UiState.Success<MarkdownImage>>()
-                            .filter { it.data.imageUrl in value.text }
+                            .mapNotNull { state ->
+                                val image = state.data
+                                val countInDoc = imageUsageInDoc[image.imageUrl] ?: 0
+                                if (countInDoc > 0) image to countInDoc else null
+                            }
                     }
                     if (imagesInDoc.isNotEmpty()) {
                         Text(
@@ -146,8 +167,7 @@ fun MarkdownEditor(
                                 .padding(horizontal = 8.dp),
                             contentPadding = PaddingValues(bottom = 8.dp)
                         ) {
-                            items(imagesInDoc) { state ->
-                                val image = state.data
+                            items(imagesInDoc) { (image, countInDoc) ->
                                 Card(
                                     modifier = Modifier.padding(4.dp).fillMaxWidth(),
                                     colors = CardDefaults.cardColors(
@@ -160,31 +180,84 @@ fun MarkdownEditor(
                                         verticalAlignment = Alignment.CenterVertically,
                                         modifier = Modifier.padding(8.dp)
                                     ) {
-                                        SubcomposeAsyncImage(
-                                            model = image.imageUrl,
-                                            contentDescription = image.filename,
-                                            modifier = Modifier.size(60.dp),
-                                            contentScale = ContentScale.Crop,
-                                            error = {
-                                                Icon(
-                                                    Icons.Default.BrokenImage,
-                                                    contentDescription = null,
-                                                    tint = MaterialTheme.colorScheme.error,
-                                                    modifier = Modifier.fillMaxSize().padding(8.dp)
-                                                )
+                                        Box(modifier = Modifier.size(60.dp)) {
+                                            SubcomposeAsyncImage(
+                                                model = image.imageUrl,
+                                                contentDescription = image.filename,
+                                                modifier = Modifier.fillMaxSize(),
+                                                contentScale = ContentScale.Crop,
+                                                error = {
+                                                    Icon(
+                                                        Icons.Default.BrokenImage,
+                                                        contentDescription = null,
+                                                        tint = MaterialTheme.colorScheme.error,
+                                                        modifier = Modifier.fillMaxSize().padding(8.dp)
+                                                    )
+                                                }
+                                            )
+
+                                            // Usage Count Badge (Bottom-Right) - Show count in current document
+                                            if (countInDoc > 0) {
+                                                Surface(
+                                                    modifier = Modifier
+                                                        .align(Alignment.BottomEnd)
+                                                        .padding(2.dp),
+                                                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f),
+                                                    shape = RoundedCornerShape(4.dp)
+                                                ) {
+                                                    Text(
+                                                        text = countInDoc.toString(),
+                                                        style = MaterialTheme.typography.labelSmall,
+                                                        modifier = Modifier.padding(horizontal = 3.dp, vertical = 1.dp),
+                                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                    )
+                                                }
                                             }
-                                        )
+
+                                            // Change indicator (+N/-N) (Top-Right)
+                                            val diff = countInDoc - image.usageCount
+                                            if (diff != 0) {
+                                                Surface(
+                                                    modifier = Modifier
+                                                        .align(Alignment.TopEnd)
+                                                        .padding(2.dp),
+                                                    color = if (diff > 0) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.errorContainer,
+                                                    shape = RoundedCornerShape(4.dp)
+                                                ) {
+                                                    Text(
+                                                        text = if (diff > 0) "+$diff" else diff.toString(),
+                                                        style = MaterialTheme.typography.labelSmall,
+                                                        modifier = Modifier.padding(horizontal = 3.dp, vertical = 1.dp),
+                                                        color = if (diff > 0) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onErrorContainer
+                                                    )
+                                                }
+                                            }
+                                        }
                                         Spacer(Modifier.width(12.dp))
-                                        Column {
+                                        Column(modifier = Modifier.weight(1f)) {
                                             Text(
                                                 image.filename,
                                                 style = MaterialTheme.typography.bodySmall
                                             )
                                             Text(
-                                                stringResource(Res.string.markdown_editor_url_label, image.imageUrl),
+                                                "URL: ${image.imageUrl}",
                                                 style = MaterialTheme.typography.labelSmall,
                                                 maxLines = 1,
                                                 overflow = TextOverflow.Ellipsis
+                                            )
+                                        }
+                                        
+                                        // Doc usage count
+                                        Surface(
+                                            color = MaterialTheme.colorScheme.secondaryContainer,
+                                            shape = CircleShape,
+                                            modifier = Modifier.padding(start = 8.dp)
+                                        ) {
+                                            Text(
+                                                text = countInDoc.toString(),
+                                                style = MaterialTheme.typography.labelMedium,
+                                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                                                color = MaterialTheme.colorScheme.onSecondaryContainer
                                             )
                                         }
                                     }

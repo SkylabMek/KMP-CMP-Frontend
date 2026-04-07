@@ -36,7 +36,8 @@ internal fun ImageManagementDialog(
     imageState: UiState<List<UiState<MarkdownImage>>>,
     onDismissRequest: () -> Unit,
     onImageSelect: (MarkdownImage) -> Unit,
-    onDeleteImage: (MarkdownImage) -> Unit
+    onDeleteImage: (MarkdownImage) -> Unit,
+    imageUsageInDoc: Map<String, Int> = emptyMap()
 ) {
     var isEditMode by remember { mutableStateOf(false) }
     var imageToDelete by remember { mutableStateOf<MarkdownImage?>(null) }
@@ -128,6 +129,45 @@ internal fun ImageManagementDialog(
                                                 }
                                             )
                                         }
+
+                                        // Usage Count Badge (Bottom-Right) - Show count in current document
+                                        val countInDoc = imageUsageInDoc[image.imageUrl] ?: 0
+                                        if (countInDoc > 0) {
+                                            Surface(
+                                                modifier = Modifier
+                                                    .align(Alignment.BottomEnd)
+                                                    .padding(4.dp),
+                                                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f),
+                                                shape = RoundedCornerShape(4.dp)
+                                            ) {
+                                                Text(
+                                                    text = countInDoc.toString(),
+                                                    style = MaterialTheme.typography.labelSmall,
+                                                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
+                                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                )
+                                            }
+                                        }
+
+                                        // Change indicator (+N/-N) (Top-Right)
+                                        val diff = countInDoc - image.usageCount
+                                        if (diff != 0 && !isEditMode) {
+                                            Surface(
+                                                modifier = Modifier
+                                                    .align(Alignment.TopEnd)
+                                                    .padding(4.dp),
+                                                color = if (diff > 0) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.errorContainer,
+                                                shape = RoundedCornerShape(4.dp)
+                                            ) {
+                                                Text(
+                                                    text = if (diff > 0) "+$diff" else diff.toString(),
+                                                    style = MaterialTheme.typography.labelSmall,
+                                                    modifier = Modifier.padding(horizontal = 3.dp, vertical = 1.dp),
+                                                    color = if (diff > 0) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onErrorContainer
+                                                )
+                                            }
+                                        }
+
                                         if (isEditMode) {
                                             IconButton(
                                                 onClick = { imageToDelete = image },

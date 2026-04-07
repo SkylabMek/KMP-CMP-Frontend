@@ -16,8 +16,7 @@ data class PerformanceResult(
 data class PerformanceUpdateResult(
     val id: String,
     val title: String,
-    @SerialName("images_added") val imagesAdded: Int,
-    @SerialName("images_removed") val imagesRemoved: Int,
+    @SerialName("images_synced") val imagesSynced: Int,
     @SerialName("updated_at") val updatedAt: String
 )
 
@@ -36,8 +35,7 @@ data class PerformanceContentResult(
 data class PerformanceContentUpdateResult(
     @SerialName("performance_id") val performanceId: String,
     @SerialName("content_url") val contentUrl: String,
-    @SerialName("images_added") val imagesAdded: Int,
-    @SerialName("images_removed") val imagesRemoved: Int
+    @SerialName("images_synced") val imagesSynced: Int
 )
 
 @Serializable
@@ -105,7 +103,60 @@ data class ImageResult(
     @SerialName("alt_text") val altText: String? = null,
     val caption: String? = null,
     @SerialName("created_at") val createdAt: String,
-    @SerialName("usage_count") val usageCount: Int? = null
+    @SerialName("usage_count") val usageCount: Int? = null,
+    val performances: List<PerformanceUsageInfo>? = null
+)
+
+@Serializable
+data class PerformanceUsageInfo(
+    @SerialName("performance_id") val performanceId: String,
+    val title: String,
+    @SerialName("usage_count") val usageCount: Int,
+    @SerialName("first_used_at") val firstUsedAt: String,
+    @SerialName("last_used_at") val lastUsedAt: String
+)
+
+@Serializable
+data class ImageUsageResult(
+    @SerialName("image_id") val imageId: String,
+    @SerialName("total_usage") val totalUsage: Int,
+    val performances: List<PerformanceUsageInfo>
+)
+
+@Serializable
+data class UnusedImagesResult(
+    @SerialName("unused_images") val unusedImages: List<ImageResult>,
+    @SerialName("total_size_bytes") val totalSizeBytes: Int,
+    val count: Int
+)
+
+@Serializable
+data class DeleteUnusedImagesResult(
+    @SerialName("deleted_count") val deletedCount: Int,
+    @SerialName("freed_bytes") val freedBytes: Int
+)
+
+@Serializable
+data class PerformanceImagesResult(
+    @SerialName("performance_id") val performanceId: String,
+    val images: List<ImageResult>
+)
+
+@Serializable
+data class TrackImageUsageRequest(
+    @SerialName("image_id") val imageId: String,
+    @SerialName("performance_id") val performanceId: String
+)
+
+@Serializable
+data class ProfileResult(
+    val profile: Profile
+)
+
+@Serializable
+data class Profile(
+    val id: String,
+    @SerialName("current_status_id") val currentStatusId: String? = null
 )
 
 @Serializable

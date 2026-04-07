@@ -147,6 +147,15 @@ class PerformanceRepositoryImpl(
         )
     }
 
+    override suspend fun getImageDetails(profileId: String, imageId: String): NetworkResult<ImageResult> {
+        return networkClient.executeWrapped(
+            reqSpec = RequestSpec(
+                method = HttpMethod.Get,
+                path = "/profiles/$profileId/images/$imageId"
+            )
+        )
+    }
+
     override suspend fun uploadImage(
         profileId: String,
         fileBytes: ByteArray,
@@ -173,11 +182,114 @@ class PerformanceRepositoryImpl(
         )
     }
 
+    override suspend fun updateImageMetadata(
+        profileId: String,
+        imageId: String,
+        altText: String?,
+        caption: String?
+    ): NetworkResult<MessageResult> {
+        return networkClient.executeWrapped(
+            reqSpec = RequestSpec(
+                method = HttpMethod.Patch,
+                path = "/profiles/$profileId/images/$imageId",
+                body = mapOf(
+                    "alt_text" to altText,
+                    "caption" to caption
+                )
+            )
+        )
+    }
+
+    override suspend fun deleteImage(profileId: String, imageId: String): NetworkResult<MessageResult> {
+        return networkClient.executeWrapped(
+            reqSpec = RequestSpec(
+                method = HttpMethod.Delete,
+                path = "/profiles/$profileId/images/$imageId"
+            )
+        )
+    }
+
     override suspend fun forceDeleteImage(profileId: String, imageId: String): NetworkResult<MessageResult> {
         return networkClient.executeWrapped(
             reqSpec = RequestSpec(
                 method = HttpMethod.Delete,
                 path = "/profiles/$profileId/images/$imageId/force"
+            )
+        )
+    }
+
+    override suspend fun getPerformanceImages(
+        profileId: String,
+        performanceId: String
+    ): NetworkResult<PerformanceImagesResult> {
+        return networkClient.executeWrapped(
+            reqSpec = RequestSpec(
+                method = HttpMethod.Get,
+                path = "/profiles/$profileId/performances/$performanceId/images"
+            )
+        )
+    }
+
+    override suspend fun getImagePerformances(
+        profileId: String,
+        imageId: String
+    ): NetworkResult<ImageUsageResult> {
+        return networkClient.executeWrapped(
+            reqSpec = RequestSpec(
+                method = HttpMethod.Get,
+                path = "/profiles/$profileId/images/$imageId/performances"
+            )
+        )
+    }
+
+    override suspend fun trackImageUsage(
+        profileId: String,
+        request: TrackImageUsageRequest
+    ): NetworkResult<MessageResult> {
+        return networkClient.executeWrapped(
+            reqSpec = RequestSpec(
+                method = HttpMethod.Post,
+                path = "/profiles/$profileId/images/usage",
+                body = request
+            )
+        )
+    }
+
+    override suspend fun untrackImageUsage(
+        profileId: String,
+        request: TrackImageUsageRequest
+    ): NetworkResult<MessageResult> {
+        return networkClient.executeWrapped(
+            reqSpec = RequestSpec(
+                method = HttpMethod.Delete,
+                path = "/profiles/$profileId/images/usage",
+                body = request
+            )
+        )
+    }
+
+    override suspend fun getUnusedImages(profileId: String, daysOld: Int?): NetworkResult<UnusedImagesResult> {
+        var path = "/profiles/$profileId/images/unused"
+        daysOld?.let { path += "?days_old=$it" }
+        return networkClient.executeWrapped(
+            reqSpec = RequestSpec(
+                method = HttpMethod.Get,
+                path = path
+            )
+        )
+    }
+
+    override suspend fun deleteUnusedImages(
+        profileId: String,
+        confirm: Boolean,
+        daysOld: Int?
+    ): NetworkResult<DeleteUnusedImagesResult> {
+        var path = "/profiles/$profileId/images/unused?confirm=$confirm"
+        daysOld?.let { path += "&days_old=$it" }
+        return networkClient.executeWrapped(
+            reqSpec = RequestSpec(
+                method = HttpMethod.Delete,
+                path = path
             )
         )
     }

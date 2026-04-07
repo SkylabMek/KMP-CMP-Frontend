@@ -30,7 +30,8 @@ internal fun ImagePickerToolbar(
     isUploading: Boolean,
     onUploadClick: () -> Unit,
     onShowAllClick: () -> Unit,
-    onImageSelect: (MarkdownImage) -> Unit
+    onImageSelect: (MarkdownImage) -> Unit,
+    imageUsageInDoc: Map<String, Int> = emptyMap()
 ) {
     Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp)) {
         Text(stringResource(Res.string.image_picker_title), style = MaterialTheme.typography.labelSmall)
@@ -91,25 +92,65 @@ internal fun ImagePickerToolbar(
                                     modifier = Modifier.size(72.dp),
                                     shape = RoundedCornerShape(8.dp)
                                 ) {
-                                    SubcomposeAsyncImage(
-                                        model = image.imageUrl,
-                                        contentDescription = image.filename,
-                                        modifier = Modifier.fillMaxSize()
-                                            .background(MaterialTheme.colorScheme.surface),
-                                        contentScale = ContentScale.Crop,
-                                        error = {
-                                            Box(
-                                                Modifier.fillMaxSize(),
-                                                contentAlignment = Alignment.Center
+                                    Box(modifier = Modifier.fillMaxSize()) {
+                                        SubcomposeAsyncImage(
+                                            model = image.imageUrl,
+                                            contentDescription = image.filename,
+                                            modifier = Modifier.fillMaxSize()
+                                                .background(MaterialTheme.colorScheme.surface),
+                                            contentScale = ContentScale.Crop,
+                                            error = {
+                                                Box(
+                                                    Modifier.fillMaxSize(),
+                                                    contentAlignment = Alignment.Center
+                                                ) {
+                                                    Icon(
+                                                        Icons.Default.BrokenImage,
+                                                        contentDescription = null,
+                                                        tint = MaterialTheme.colorScheme.error
+                                                    )
+                                                }
+                                            }
+                                        )
+
+                                        // Usage Count Badge (Bottom-Right) - Show count in current document
+                                        val countInDoc = imageUsageInDoc[image.imageUrl] ?: 0
+                                        if (countInDoc > 0) {
+                                            Surface(
+                                                modifier = Modifier
+                                                    .align(Alignment.BottomEnd)
+                                                    .padding(4.dp),
+                                                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f),
+                                                shape = RoundedCornerShape(4.dp)
                                             ) {
-                                                Icon(
-                                                    Icons.Default.BrokenImage,
-                                                    contentDescription = null,
-                                                    tint = MaterialTheme.colorScheme.error
+                                                Text(
+                                                    text = countInDoc.toString(),
+                                                    style = MaterialTheme.typography.labelSmall,
+                                                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
+                                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                                 )
                                             }
                                         }
-                                    )
+
+                                        // Change indicator (+N/-N) (Top-Right)
+                                        val diff = countInDoc - image.usageCount
+                                        if (diff != 0) {
+                                            Surface(
+                                                modifier = Modifier
+                                                    .align(Alignment.TopEnd)
+                                                    .padding(4.dp),
+                                                color = if (diff > 0) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.errorContainer,
+                                                shape = RoundedCornerShape(4.dp)
+                                            ) {
+                                                Text(
+                                                    text = if (diff > 0) "+$diff" else diff.toString(),
+                                                    style = MaterialTheme.typography.labelSmall,
+                                                    modifier = Modifier.padding(horizontal = 3.dp, vertical = 1.dp),
+                                                    color = if (diff > 0) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onErrorContainer
+                                                )
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }

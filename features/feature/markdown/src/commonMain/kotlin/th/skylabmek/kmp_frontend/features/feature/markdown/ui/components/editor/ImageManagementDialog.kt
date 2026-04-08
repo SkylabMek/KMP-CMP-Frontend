@@ -149,21 +149,21 @@ internal fun ImageManagementDialog(
                                             }
                                         }
 
-                                        // Change indicator (+N/-N) (Top-Right)
+                                        // Change indicator (-N) (Top-Right) - Only show if usage decreased
                                         val diff = countInDoc - image.usageCount
-                                        if (diff != 0 && !isEditMode) {
+                                        if (diff < 0 && !isEditMode) {
                                             Surface(
                                                 modifier = Modifier
                                                     .align(Alignment.TopEnd)
                                                     .padding(4.dp),
-                                                color = if (diff > 0) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.errorContainer,
+                                                color = MaterialTheme.colorScheme.errorContainer,
                                                 shape = RoundedCornerShape(4.dp)
                                             ) {
                                                 Text(
-                                                    text = if (diff > 0) "+$diff" else diff.toString(),
+                                                    text = diff.toString(),
                                                     style = MaterialTheme.typography.labelSmall,
                                                     modifier = Modifier.padding(horizontal = 3.dp, vertical = 1.dp),
-                                                    color = if (diff > 0) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onErrorContainer
+                                                    color = MaterialTheme.colorScheme.onErrorContainer
                                                 )
                                             }
                                         }

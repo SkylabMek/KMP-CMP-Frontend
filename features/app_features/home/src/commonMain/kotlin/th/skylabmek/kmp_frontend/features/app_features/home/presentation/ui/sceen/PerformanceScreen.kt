@@ -6,8 +6,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -18,6 +16,7 @@ import th.skylabmek.kmp_frontend.features.feature.performance.presentation.compo
 import th.skylabmek.kmp_frontend.features.feature.performance.presentation.components.performance.privatePerformance.PerformanceShowGrid
 import th.skylabmek.kmp_frontend.shared_resources.Res
 import th.skylabmek.kmp_frontend.shared_resources.*
+import th.skylabmek.kmp_frontend.ui.components.dialog.FullScreenDialog
 import th.skylabmek.kmp_frontend.ui.components.layout.DefaultErrorContent
 import th.skylabmek.kmp_frontend.ui.components.layout.DefaultLoadingContent
 import th.skylabmek.kmp_frontend.ui.dimens.Dimens
@@ -118,23 +117,13 @@ fun PerformanceScreen(
     }
 
     selectedPerformance?.let { performance ->
-        Dialog(
-            onDismissRequest = { selectedPerformance = null },
-            properties = DialogProperties(usePlatformDefaultWidth = false)
+        FullScreenDialog(
+            onDismissRequest = { selectedPerformance = null }
         ) {
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth(0.95f)
-                    .fillMaxHeight(0.85f),
-                shape = MaterialTheme.shapes.extraLarge,
-                color = MaterialTheme.colorScheme.surface,
-                tonalElevation = 6.dp
-            ) {
-                PerformanceFullContent(
-                    performance = performance,
-                    onClose = { selectedPerformance = null }
-                )
-            }
+            PerformanceFullContent(
+                performance = performance,
+                onClose = { selectedPerformance = null }
+            )
         }
     }
 }

@@ -34,9 +34,10 @@ class HomeNavProvider(
     }
 
     override fun mapUriToNavKey(uri: String): NavKey? {
-        return when {
-            uri == "/" || uri.endsWith("/home") -> HomeNavKey.Home
-            uri.endsWith("/performances") -> HomeNavKey.PerformanceList
+        val path = uri.substringBefore("?").removePrefix("#")
+        return when (path) {
+            "/", "/home" -> HomeNavKey.Home
+            "/performances" -> HomeNavKey.PerformanceList
             else -> null
         }
     }

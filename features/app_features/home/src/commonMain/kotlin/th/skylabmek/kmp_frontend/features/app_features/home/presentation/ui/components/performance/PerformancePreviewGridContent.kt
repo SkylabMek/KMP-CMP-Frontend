@@ -4,14 +4,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import th.skylabmek.kmp_frontend.core.common.UiState
 import th.skylabmek.kmp_frontend.domain.model.performances.Performance
 import th.skylabmek.kmp_frontend.domain.model.performances.PerformanceListResult
 import th.skylabmek.kmp_frontend.features.feature.performance.presentation.components.performance.publicPerformance.PerformanceFullContent
 import th.skylabmek.kmp_frontend.features.feature.performance.presentation.components.performance.publicPerformance.PerformanceShowGrid
+import th.skylabmek.kmp_frontend.ui.components.dialog.FullScreenDialog
 import th.skylabmek.kmp_frontend.ui.components.layout.DefaultErrorContent
 import th.skylabmek.kmp_frontend.ui.components.layout.DefaultLoadingContent
 import th.skylabmek.kmp_frontend.ui.dimens.Dimens
@@ -67,25 +65,13 @@ fun PerformancePreviewGridContent(
     }
 
     selectedPerformance?.let { performance ->
-        Dialog(
-            onDismissRequest = { selectedPerformance = null },
-            properties = DialogProperties(usePlatformDefaultWidth = false)
+        FullScreenDialog(
+            onDismissRequest = { selectedPerformance = null }
         ) {
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth(0.95f)
-                    .fillMaxHeight(0.85f),
-                shape = MaterialTheme.shapes.extraLarge,
-                color = MaterialTheme.colorScheme.surface,
-                tonalElevation = 6.dp
-            ) {
-                Surface(modifier = Modifier.fillMaxSize()) {
-                    PerformanceFullContent(
-                        performance = performance,
-                        onClose = { selectedPerformance = null }
-                    )
-                }
-            }
+            PerformanceFullContent(
+                performance = performance,
+                onClose = { selectedPerformance = null }
+            )
         }
     }
 }

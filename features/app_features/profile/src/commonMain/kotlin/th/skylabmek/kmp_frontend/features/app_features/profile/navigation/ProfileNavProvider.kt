@@ -47,12 +47,13 @@ class ProfileNavProvider(
     }
 
     override fun mapUriToNavKey(uri: String): NavKey? {
+        val path = uri.substringBefore("?").removePrefix("#")
         return when {
-            uri.endsWith("/profile") -> ProfileNavKey.Profile
-            uri.endsWith("/profile/admin") -> ProfileNavKey.ProfileAdmin
-            uri.endsWith("/login") -> ProfileNavKey.Login
-            uri.contains("/performance/") -> {
-                val id = uri.substringAfterLast("/")
+            path == "/profile" -> ProfileNavKey.Profile
+            path == "/profile/admin" -> ProfileNavKey.ProfileAdmin
+            path == "/login" -> ProfileNavKey.Login
+            path.startsWith("/performance/") -> {
+                val id = path.substringAfterLast("/")
                 ProfileNavKey.PerformanceAdmin(id)
             }
             else -> null

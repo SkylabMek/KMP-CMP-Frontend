@@ -12,12 +12,12 @@ fun main() {
     initKoin()
     val body = document.body ?: return
     
-    // Capture the initial path from the browser to handle initial routing
-//    val initialPath = window.location.pathname + window.location.search
+    // Capture the initial hash from the browser to handle initial routing
+    val initialPath = window.location.hash.takeIf { it.isNotEmpty() } ?: "/"
     
     ComposeViewport(body) {
         App(
-//            deepLinkUri = initialPath
+            deepLinkUri = initialPath
         )
     }
 }
